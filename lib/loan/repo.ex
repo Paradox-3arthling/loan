@@ -1,5 +1,5 @@
 defmodule Loan.Repo do
-  use Ecto.Repo, otp_app: :loan
+  use Ecto.Repo, otp_app: :loan , adapter: Ecto.Adapters.MySQL
 
   @doc """
   Dynamically loads the repository url from the

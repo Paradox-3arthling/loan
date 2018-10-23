@@ -49,7 +49,6 @@ config :phoenix, :stacktrace_depth, 20
 
 # Configure your database
 config :loan, Loan.Repo,
-  adapter: Ecto.Adapters.MySQL,
   username: "root",
   password: "",
   database: "loan_dev",

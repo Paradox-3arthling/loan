@@ -20,7 +20,7 @@ defmodule Loan.Mixfile do
   def application do
     [
       mod: {Loan.Application, []},
-      extra_applications: [:logger, :runtime_tools]
+      extra_applications: [:logger, :runtime_tools, :phoenix_ecto]
     ]
   end
 
@@ -35,8 +35,10 @@ defmodule Loan.Mixfile do
     [
       {:phoenix, "~> 1.3.4"},
       {:phoenix_pubsub, "~> 1.0"},
+      {:ecto, "~> 3.0"},
       {:phoenix_ecto, "~> 4.0"},
-      {:mariaex, ">= 0.0.0"},
+      {:ecto_sql, "~> 3.0.0-rc.0"},
+      {:mariaex, "~> 0.9.0-rc.0"},
       {:phoenix_html, "~> 2.10"},
       {:phoenix_live_reload, "~> 1.0", only: :dev},
       {:gettext, "~> 0.11"},
