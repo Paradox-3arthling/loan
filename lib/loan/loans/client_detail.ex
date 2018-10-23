@@ -21,6 +21,7 @@ defmodule Loan.Loans.ClientDetail do
     field :total, :decimal
     # field :user_id, :id
     belongs_to :user, User
+    field :paid, :decimal, virtual: true
 
     timestamps()
   end
@@ -28,7 +29,7 @@ defmodule Loan.Loans.ClientDetail do
   @doc false
   def changeset(client_detail, attrs) do
     client_detail
-    |> cast(attrs, [:registration_number, :name, :paydate, :principal_amount, :rate, :penalties])
+    |> cast(attrs, [:registration_number, :name, :paydate, :principal_amount, :rate, :paid, :penalties, :total, :residence, :mobile_number, :interest, :active, :day_not_paid, :guarantor, :identification_number])
     |> validate_required([:registration_number, :name, :paydate, :principal_amount, :rate, :penalties])
     |> unique_constraint(:registration_number)
   end
