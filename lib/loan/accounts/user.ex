@@ -19,7 +19,7 @@ defmodule Loan.Accounts.User do
   def changeset(user, attrs) do
     user
     |> cast(attrs, [:name, :email, :mobileNo])
-    |> validate_required([:name, :email, :mobileNo])
+    |> validate_required([:name, :email])
     |> unique_constraint(:email)
     |> unique_constraint(:mobileNo)
   end

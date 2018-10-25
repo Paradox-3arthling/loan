@@ -1,6 +1,6 @@
 <div class="container">
   <h2>Edit Client detail</h2>
-  <%= render "form.html", Map.put(assigns, :action, client_detail_path(@conn, :update, @client_detail)) %>
+  <%= render "edit_form.html", Map.put(assigns, :action, client_detail_path(@conn, :update, @client_detail)) %>
 
   <span><%= link "Back", to: client_detail_path(@conn, :index) %></span>
 

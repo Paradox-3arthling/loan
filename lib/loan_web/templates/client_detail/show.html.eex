@@ -39,8 +39,13 @@
     </li>
 
     <li>
-      <strong>Total:</strong>
+      <strong>Current Total:</strong>
       <%= @client_detail.total %>
+    </li>
+
+    <li>
+      <strong>Initial Total :</strong>
+      <%= @client_detail.initial_total_paid %>
     </li>
 
     <li>
@@ -68,13 +73,16 @@
       <%= @client_detail.penalties %>
     </li>
 
-    <!-- <li>
-      <strong>Active:</strong>
-      <%= @client_detail.active %>
-    </li> -->
+    <li>
+      <strong>Total Paid:</strong>
+      <%= @client_detail.total_paid %>
+    </li>
 
   </ul>
 
-  <span><%= link "Edit", to: client_detail_path(@conn, :edit, @client_detail) %></span>
-  <span><%= link "Back", to: client_detail_path(@conn, :index) %></span>
+      <span><%= link "Edit", to: client_detail_path(@conn, :edit, @client_detail), class: "btn btn-link btn-sm" %></span>
+      <span><%= link "Back", to: client_detail_path(@conn, :index), class: "btn btn-link btn-sm" %></span>
+      <span><%= link "Pay Due's", to: client_detail_path(@conn, :show_payment_page, @client_detail), class: "btn btn-primary btn-sm" %></span>
+
+
 </div>

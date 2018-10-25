@@ -27,37 +27,43 @@ defmodule LoanWeb.ClientDetailController do
     date = Date.add(date, 30)
 
     {rate,""} = Float.parse( Map.get(client_detail_params, "rate") )
-    {principal_amount,""} = Float.parse( Map.get(client_detail_params, "principal_amount") )
 
-    interest = principal_amount *  rate / 100
-    total_amount = principal_amount + interest
+    case  Float.parse(client_detail_params["principal_amount"]) do
 
-    Logger.info "--------------------------"
-    Logger.info "hello #{inspect(client_detail_params)}"
-    # %{map | "in" => "two"}  # for updating maps
-    client_detail_params = Map.put(client_detail_params, "interest", interest)
-    client_detail_params = Map.put(client_detail_params, "total", total_amount)
-    client_detail_params = put_in client_detail_params["paydate"]["day"], date.day
-    client_detail_params = put_in client_detail_params["paydate"]["month"], date.month
-    client_detail_params = put_in client_detail_params["paydate"]["year"], date.year
-    # client_detail_params = put_in client_detail_params, 31
+      {principal_amount,""} ->
+        interest = principal_amount *  rate / 100
+        total_amount = principal_amount + interest
+        random_number = :rand.uniform(10)
+        registration_number = client_detail_params["paydate"]["month"] <> "/" <> client_detail_params["paydate"]["day"] <> "/" <> random_number
+        Logger.info "--------------------------"
+        Logger.info "hello #{inspect(registration_number)}"
+        # %{map | "in" => "two"}  # for updating maps
+        client_detail_params = Map.put(client_detail_params, "interest", interest)
+        client_detail_params = put_in client_detail_params["registration_number"], registration_number
+        client_detail_params = put_in client_detail_params["total"], total_amount
+        client_detail_params = put_in client_detail_params["initial_total_paid"], total_amount
+        client_detail_params = put_in client_detail_params["paydate"]["day"], date.day
+        client_detail_params = put_in client_detail_params["paydate"]["month"], date.month
+        client_detail_params = put_in client_detail_params["paydate"]["year"], date.year
 
-    Logger.info "--------------------------"
-    Logger.info "day #{inspect(date.day)}"
-    Logger.info "month #{inspect(date.month)}"
-    Logger.info "year #{inspect(date.year)} %"
-    Logger.info "--------------------------"
-    Logger.info "interest: #{inspect(interest)} %"
-    Logger.info "--------------------------"
-    Logger.info "total_amount: #{inspect(total_amount)} %"
-    Logger.info "--------------------------"
-    case Loans.create_client_detail(id, client_detail_params) do
-      {:ok, client_detail} ->
-        conn
-        |> put_flash(:info, "Client detail created successfully.")
-        |> redirect(to: client_detail_path(conn, :show, client_detail))
-      {:error, %Ecto.Changeset{} = changeset} ->
-        render(conn, "new.html", changeset: changeset)
+        case Loans.create_client_detail(id, client_detail_params) do
+          {:ok, client_detail} ->
+            conn
+            |> put_flash(:info, "Client detail created successfully.")
+            |> redirect(to: client_detail_path(conn, :show, client_detail))
+          {:error, %Ecto.Changeset{} = changeset} ->
+            render(conn, "new.html", changeset: changeset)
+        end
+      _ ->
+      case Loans.create_client_detail(id, client_detail_params) do
+        {:ok, client_detail} ->
+          conn
+          |> put_flash(:info, "Client detail created successfully.")
+          |> redirect(to: client_detail_path(conn, :show, client_detail))
+        {:error, %Ecto.Changeset{} = changeset} ->
+          render(conn, "new.html", changeset: changeset)
+      end
+
     end
   end
 
@@ -80,22 +86,28 @@ defmodule LoanWeb.ClientDetailController do
 
   def update_payment(conn, %{"id" => id, "client_detail" => client_detail_params}) do
     client_detail = Loans.get_client_detail!(id)
-    # changeset = Loans.change_client_detail(client_detail)
 
     total = Decimal.to_float(client_detail.total)
     total_db = Decimal.to_float(client_detail.total)
-    total_payment = Decimal.to_float(client_detail.total_paid)
+    total_paid = Decimal.to_float(client_detail.total_paid)
+
     case  Float.parse(client_detail_params["paid"]) do
         {payment, ""} -> total = total - payment
-            total_payment = total_payment + payment
+            total_paid = total_paid + payment
             ################################
+            Logger.info "--------------------------"
+            Logger.info "total payment #{inspect(client_detail_params)}"
+
             client_detail_params = Map.put(client_detail_params, "total", total)
-            client_detail_params = Map.put(client_detail_params, "total_payment", total_payment)
+            client_detail_params = Map.put(client_detail_params, "total_paid", total_paid)
+            ################################
+            Logger.info "--------------------------"
+            Logger.info "total payment #{inspect(client_detail_params)}"
 
             case Loans.update_client_payment(client_detail, client_detail_params, total_db) do
               {:ok, client_detail} ->
                 conn
-                |> put_flash(:info, "Client payment successfully paid.")
+                |> put_flash(:info, "Client payment successfully procesed!")
                 |> put_layout("app.html")
                 |> redirect(to: client_detail_path(conn, :show, client_detail))
               {:error, %Ecto.Changeset{} = changeset} ->
@@ -103,34 +115,18 @@ defmodule LoanWeb.ClientDetailController do
             end
 
         _ ->  Logger.info "No payment given"
+        ################################
+
+          case Loans.update_client_payment(client_detail, client_detail_params, total_db) do
+            {:ok, client_detail} ->
+              conn
+              |> put_flash(:info, "Client payment successfully paid.")
+              |> put_layout("app.html")
+              |> redirect(to: client_detail_path(conn, :show, client_detail))
+            {:error, %Ecto.Changeset{} = changeset} ->
+              render(conn, "pay.html", client_detail: client_detail, changeset: changeset)
+          end
       end
-    # {payment, ""} = Float.parse(client_detail_params["paid"])
-    # total = total - payment
-    # total_payment = total_payment + payment
-    Logger.info "--------------------------"
-    Logger.info "total payment #{inspect(client_detail_params)}"
-    # Logger.info "total payment #{inspect(Float.parse(client_detail_params["paid"]))}"
-
-    Logger.info "--------------------------"
-    Logger.info "total payment #{inspect(total_payment)}"
-    Logger.info "--------------------------"
-    Logger.info "total #{inspect(total)}"
-    Logger.info "--------------------------"
-    # Logger.info "payment #{inspect(payment)}"
-    Logger.info "--------------------------"
-
-    ################################
-
-    case Loans.update_client_payment(client_detail, client_detail_params, total_db) do
-      {:ok, client_detail} ->
-        conn
-        |> put_flash(:info, "Client payment successfully paid.")
-        |> put_layout("app.html")
-        |> redirect(to: client_detail_path(conn, :show, client_detail))
-      {:error, %Ecto.Changeset{} = changeset} ->
-        render(conn, "pay.html", client_detail: client_detail, changeset: changeset)
-    end
-
   end
 
   def update(conn, %{"id" => id, "client_detail" => client_detail_params}) do
@@ -140,28 +136,6 @@ defmodule LoanWeb.ClientDetailController do
 Logger.info "--------------------------"
 Logger.info "hello #{inspect(client_detail_params)}"
 
-{rate, ""} = Float.parse( Map.get(client_detail_params, "rate") )
-{principal_amount, ""} = Float.parse( Map.get(client_detail_params, "principal_amount") )
-# {paid, ""} = Float.parse( Map.get(client_detail_params, "paid") )
-interest = principal_amount *  rate / 100
-total_amount = principal_amount + interest
-
-# %{map | "in" => "two"}  # for updating maps
-client_detail_params = Map.put(client_detail_params, "interest", interest)
-client_detail_params = Map.put(client_detail_params, "total", total_amount)
-# client_detail_params = put_in client_detail_params, 31
-# users = put_in users[:john].age, 31
-Logger.info "--------------------------"
-Logger.info "hello #{inspect(client_detail_params)}"
-Logger.info "--------------------------"
-Logger.info "principal_amount #{inspect(principal_amount)}"
-Logger.info "--------------------------"
-Logger.info "rate #{inspect(rate)} %"
-Logger.info "--------------------------" #
-Logger.info "interest: #{inspect(interest)} %"
-Logger.info "--------------------------" # %{map | 2 => "two"}
-Logger.info "total_amount: #{inspect(total_amount)} %"
-Logger.info "--------------------------" # %{map | 2 => "two"}
 #################################
     case Loans.update_client_detail(client_detail, client_detail_params) do
       {:ok, client_detail} ->

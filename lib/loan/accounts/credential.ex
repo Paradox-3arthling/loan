@@ -17,6 +17,7 @@ defmodule Loan.Accounts.Credential do
     credential
     |> cast(attrs, [:username, :password])
     |> validate_required([:username, :password])
+    |> validate_length(:password, min: 8, max: 40)
     |> unique_constraint(:username)
   end
 end

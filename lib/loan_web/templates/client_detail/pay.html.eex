@@ -1,6 +1,5 @@
 <div class="container">
   <h2>Show Client detail</h2>
-
   <ul>
 
     <li>
@@ -29,6 +28,26 @@
     </li>
 
     <li>
+      <strong>Principal amount:</strong>
+      <%= @client_detail.principal_amount %>
+    </li>
+
+    <li>
+      <strong>Interest:</strong>
+      <%= @client_detail.interest %>
+    </li>
+
+    <li>
+      <strong>Current Total:</strong>
+      <%= @client_detail.total %>
+    </li>
+
+    <li>
+      <strong>Initial Total :</strong>
+      <%= @client_detail.initial_total_paid %>
+    </li>
+
+    <li>
       <strong>Guarantor:</strong>
       <%= @client_detail.guarantor %>
     </li>
@@ -54,18 +73,8 @@
     </li>
 
     <li>
-      <strong>Principal amount:</strong>
-      <%= @client_detail.principal_amount %>
-    </li>
-
-    <li>
-      <strong>Interest:</strong>
-      <%= @client_detail.interest %>
-    </li>
-
-    <li>
-      <strong>Total:</strong>
-      <%= @client_detail.total %>
+      <strong>Total Paid:</strong>
+      <%= @client_detail.total_paid %>
     </li>
 
   </ul>
@@ -83,6 +92,6 @@
     </div>
     <% end %>
 
-  <span><%= link "Back", to: client_detail_path(@conn, :index) %></span>
+  <span><%= link "Back", to: client_detail_path(@conn, :index), class: "btn btn-link btn-sm"  %></span>
 
 </div>

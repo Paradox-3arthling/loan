@@ -8,20 +8,19 @@
 <table class="table">
   <thead>
     <tr>
-      <th>Registration number</th>
+      <th>Reg. number</th>
       <th>Name</th>
-      <th>Identification number</th>
+      <th>ID number</th>
       <th>Mobile number</th>
       <th>Paydate</th>
       <th>Principal amount</th>
       <th>Interest</th>
-      <th>Total</th>
-      <th>Guarantor</th>
-      <th>Residence</th>
+      <th>Initial Total</th>
+      <th>Current Total</th>
+      <th>Total Paid</th>
       <th>Days not paid</th>
       <th>Rate</th>
       <th>Penalties</th>
-      <!-- <th>Active</th> -->
 
       <th></th>
     </tr>
@@ -36,16 +35,15 @@
       <td><%= client_detail.paydate %></td>
       <td><%= client_detail.principal_amount %></td>
       <td><%= client_detail.interest %></td>
+      <td><%= client_detail.initial_total_paid %></td>
       <td><%= client_detail.total %></td>
-      <td><%= client_detail.guarantor %></td>
-      <td><%= client_detail.residence %></td>
+      <td><%= client_detail.total_paid %></td>
       <td><%= client_detail.day_not_paid %></td>
       <td><%= client_detail.rate %></td>
       <td><%= client_detail.penalties %></td>
-      <!-- <td><%= client_detail.active %></td> -->
 
       <td class="text-right">
-        <span><%= link "Show", to: client_detail_path(@conn, :show_payment_page, client_detail), class: "btn btn-default btn-xs" %></span>
+        <span><%= link "Pay Due's", to: client_detail_path(@conn, :show_payment_page, client_detail), class: "btn btn-default btn-xs" %></span>
         <span><%= link "Edit", to: client_detail_path(@conn, :edit, client_detail), class: "btn btn-default btn-xs" %></span>
         <span><%= link "Delete", to: client_detail_path(@conn, :delete, client_detail), method: :delete, data: [confirm: "Are you sure?"], class: "btn btn-danger btn-xs" %></span>
         <!-- <span><%= link "Delete", to: client_detail_path(@conn, :delete, client_detail), method: :delete, data: [confirm: "Are you sure?"], class: "btn btn-danger btn-xs" %></span> -->

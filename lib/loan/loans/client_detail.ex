@@ -20,7 +20,7 @@ defmodule Loan.Loans.ClientDetail do
     field :residence, :string
     field :total, :decimal
     field :total_paid, :decimal
-    # field :user_id, :id
+    field :initial_total_paid, :decimal
     belongs_to :user, User
     field :paid, :decimal, virtual: true
 
@@ -30,12 +30,22 @@ defmodule Loan.Loans.ClientDetail do
   @doc false
   def changeset(client_detail, attrs) do
     client_detail
-    |> cast(attrs, [:registration_number, :name, :paydate, :principal_amount, :rate, :paid, :total_paid, :penalties, :total, :residence, :mobile_number, :interest, :active, :day_not_paid, :guarantor, :identification_number])
+    |> cast(attrs, [:initial_total_paid, :registration_number, :name, :paydate, :principal_amount, :rate, :paid, :total_paid, :penalties, :total, :residence, :mobile_number, :interest, :active, :day_not_paid, :guarantor, :identification_number])
     # |> validate_required([:registration_number, :name, :paydate, :principal_amount, :rate, :paid, :total_paid, :penalties, :total, :residence, :mobile_number, :interest, :active, :day_not_paid, :guarantor, :identification_number])
     |> validate_required([:registration_number, :name, :paydate, :principal_amount, :rate, :penalties])
+    |> validate_number(:principal_amount, greater_than: 0)
+    |> validate_number(:rate, greater_than: 0)
+    |> validate_number(:rate, less_than: 100)
+    |> validate_number(:penalties, greater_than: 0)
     |> unique_constraint(:registration_number)
   end
 
+  @doc false
+  def changeset_update(client_detail, attrs) do
+    client_detail
+    |> cast(attrs, [:residence, :mobile_number, :guarantor, :identification_number])
+    |> validate_required([:residence, :mobile_number, :guarantor, :identification_number])
+  end
   @doc false
   def changeset_payment(client_detail, attrs, total) do
     total = total + 0.0001
@@ -43,14 +53,6 @@ defmodule Loan.Loans.ClientDetail do
     |> cast(attrs, [:paid, :total_paid, :total])
     |> validate_required([:paid])
     |> validate_number(:paid, less_than: total)
-  #   |> validate_from_s3_bucket(:paid)
-  # end
-  # def validate_from_s3_bucket(changeset, field, options \\ []) do
-  #   validate_change(changeset, field, fn _, url ->
-  #     case String.starts_with?(url, @our_url) do
-  #       true -> []
-  #       false -> [{field, options[:message] || "Unexpected URL"}]
-  #     end
-  #   end)
+    |> validate_number(:paid, greater_than: 0)
   end
 end
