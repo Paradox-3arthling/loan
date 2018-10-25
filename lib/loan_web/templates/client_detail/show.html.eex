@@ -78,11 +78,13 @@
       <%= @client_detail.total_paid %>
     </li>
 
+    <%= client_detail_path(@conn, :delete, @client_detail.id) %>
   </ul>
 
       <span><%= link "Edit", to: client_detail_path(@conn, :edit, @client_detail), class: "btn btn-link btn-sm" %></span>
       <span><%= link "Back", to: client_detail_path(@conn, :index), class: "btn btn-link btn-sm" %></span>
       <span><%= link "Pay Due's", to: client_detail_path(@conn, :show_payment_page, @client_detail), class: "btn btn-primary btn-sm" %></span>
 
+      <span><%= link "Delete", to: client_detail_path(@conn, :delete, @client_detail.id), class: "btn btn-danger btn-sm" %></span>
 
 </div>

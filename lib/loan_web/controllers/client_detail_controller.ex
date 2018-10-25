@@ -33,7 +33,7 @@ defmodule LoanWeb.ClientDetailController do
       {principal_amount,""} ->
         interest = principal_amount *  rate / 100
         total_amount = principal_amount + interest
-        random_number = :rand.uniform(10)
+        random_number = Integer.to_string(:rand.uniform(1000))
         registration_number = client_detail_params["paydate"]["month"] <> "/" <> client_detail_params["paydate"]["day"] <> "/" <> random_number
         Logger.info "--------------------------"
         Logger.info "hello #{inspect(registration_number)}"
@@ -148,8 +148,15 @@ Logger.info "hello #{inspect(client_detail_params)}"
   end
 
 
-  def delete(conn, %{"id" => id}) do
+  def delete(conn,id) do
     client_detail = Loans.get_client_detail!(id)
+    ################################
+    Logger.info "--------------------------"
+    Logger.info "hello #{inspect(client_detail)}"
+    Logger.info "--------------------------"
+    Logger.info "--------------------------"
+    Logger.info "hello #{inspect(id)}"
+
     {:ok, _client_detail} = Loans.delete_client_detail(client_detail)
 
     conn
