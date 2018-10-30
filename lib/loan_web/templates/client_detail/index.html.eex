@@ -1,0 +1,52 @@
+<h2>Listing Client details</h2>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Registration number</th>
+      <th>Name</th>
+      <th>Identification number</th>
+      <th>Mobile number</th>
+      <th>Paydate</th>
+      <th>Principal amount</th>
+      <th>Interest</th>
+      <th>Total</th>
+      <th>Guarantor</th>
+      <th>Residence</th>
+      <th>Days not paid</th>
+      <th>Rate</th>
+      <th>Penalties</th>
+      <!-- <th>Active</th> -->
+
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+<%= for client_detail <- @client_details do %>
+    <tr>
+      <td><%= client_detail.registration_number %></td>
+      <td><%= client_detail.name %></td>
+      <td><%= client_detail.identification_number %></td>
+      <td><%= client_detail.mobile_number %></td>
+      <td><%= client_detail.paydate %></td>
+      <td><%= client_detail.principal_amount %></td>
+      <td><%= client_detail.interest %></td>
+      <td><%= client_detail.total %></td>
+      <td><%= client_detail.guarantor %></td>
+      <td><%= client_detail.residence %></td>
+      <td><%= client_detail.day_not_paid %></td>
+      <td><%= client_detail.rate %></td>
+      <td><%= client_detail.penalties %></td>
+      <!-- <td><%= client_detail.active %></td> -->
+
+      <td class="text-right">
+        <span><%= link "Show", to: client_detail_path(@conn, :show, client_detail), class: "btn btn-default btn-xs" %></span>
+        <span><%= link "Edit", to: client_detail_path(@conn, :edit, client_detail), class: "btn btn-default btn-xs" %></span>
+        <span><%= link "Delete", to: client_detail_path(@conn, :delete, client_detail), method: :delete, data: [confirm: "Are you sure?"], class: "btn btn-danger btn-xs" %></span>
+      </td>
+    </tr>
+<% end %>
+  </tbody>
+</table>
+
+<span><%= link "New Client detail", to: client_detail_path(@conn, :new) %></span>
