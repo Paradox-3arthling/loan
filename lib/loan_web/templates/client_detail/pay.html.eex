@@ -1,0 +1,90 @@
+<div class="container">
+  <h2>Show Client detail</h2>
+
+  <ul>
+
+    <li>
+      <strong>Registration number:</strong>
+      <%= @client_detail.registration_number %>
+    </li>
+
+    <li>
+      <strong>Name:</strong>
+      <%= @client_detail.name %>
+    </li>
+
+    <li>
+      <strong>Identification number:</strong>
+      <%= @client_detail.identification_number %>
+    </li>
+
+    <li>
+      <strong>Mobile number:</strong>
+      <%= @client_detail.mobile_number %>
+    </li>
+
+    <li>
+      <strong>Paydate:</strong>
+      <%= @client_detail.paydate %>
+    </li>
+
+    <li>
+      <strong>Principal amount:</strong>
+      <%= @client_detail.principal_amount %>
+    </li>
+
+    <li>
+      <strong>Interest:</strong>
+      <%= @client_detail.interest %>
+    </li>
+
+    <li>
+      <strong>Total:</strong>
+      <%= @client_detail.total %>
+    </li>
+
+    <li>
+      <strong>Guarantor:</strong>
+      <%= @client_detail.guarantor %>
+    </li>
+
+    <li>
+      <strong>Residence:</strong>
+      <%= @client_detail.residence %>
+    </li>
+
+    <li>
+      <strong>Day not paid:</strong>
+      <%= @client_detail.day_not_paid %>
+    </li>
+
+    <li>
+      <strong>Rate:</strong>
+      <%= @client_detail.rate %>%
+    </li>
+
+    <li>
+      <strong>Penalties:</strong>
+      <%= @client_detail.penalties %>
+    </li>
+
+  </ul>
+    <h2>Payment detail</h2>
+    <%= form_for @conn, client_detail_path(@conn, :update, @client_detail), [method: :update, as: :user], fn f -> %>
+
+
+
+    <div class="form-group">
+      <label>Amount paid :</label>
+      <%= text_input f, :paid, class: "form-control", placeholder: 0 %>
+      <%= error_tag f, :paid %>
+    </div>
+
+    <div class="form-group">
+      <%= submit "Payment", class: "btn btn-primary" %>
+    </div>
+    <% end %>
+
+  <span><%= link "Back", to: client_detail_path(@conn, :index) %></span>
+
+</div>

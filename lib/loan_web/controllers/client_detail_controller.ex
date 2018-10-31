@@ -18,7 +18,14 @@ defmodule LoanWeb.ClientDetailController do
 
   def create(conn, %{"client_detail" => client_detail_params}) do
     id = get_session(conn, :user_id)
-    # rate = Map.get(client_detail_params, "rate")
+
+    {year,""} = Integer.parse( client_detail_params["paydate"]["year"] )
+    {month,""} = Integer.parse( client_detail_params["paydate"]["month"] )
+    {day,""} = Integer.parse(  client_detail_params["paydate"]["day"] )
+
+    {:ok, date} = Date.new(year, month, day)
+    date = Date.add(date, 30)
+
     {rate,""} = Float.parse( Map.get(client_detail_params, "rate") )
     {principal_amount,""} = Float.parse( Map.get(client_detail_params, "principal_amount") )
 
@@ -30,19 +37,20 @@ defmodule LoanWeb.ClientDetailController do
     # %{map | "in" => "two"}  # for updating maps
     client_detail_params = Map.put(client_detail_params, "interest", interest)
     client_detail_params = Map.put(client_detail_params, "total", total_amount)
+    client_detail_params = put_in client_detail_params["paydate"]["day"], date.day
+    client_detail_params = put_in client_detail_params["paydate"]["month"], date.month
+    client_detail_params = put_in client_detail_params["paydate"]["year"], date.year
     # client_detail_params = put_in client_detail_params, 31
-    # users = put_in users[:john].age, 31
+
     Logger.info "--------------------------"
-    Logger.info "hello #{inspect(client_detail_params)}"
+    Logger.info "day #{inspect(date.day)}"
+    Logger.info "month #{inspect(date.month)}"
+    Logger.info "year #{inspect(date.year)} %"
     Logger.info "--------------------------"
-    Logger.info "principal_amount #{inspect(principal_amount)}"
-    Logger.info "--------------------------"
-    Logger.info "rate #{inspect(rate)} %"
-    Logger.info "--------------------------" #
     Logger.info "interest: #{inspect(interest)} %"
-    Logger.info "--------------------------" # %{map | 2 => "two"}
+    Logger.info "--------------------------"
     Logger.info "total_amount: #{inspect(total_amount)} %"
-    Logger.info "--------------------------" # %{map | 2 => "two"}
+    Logger.info "--------------------------"
     case Loans.create_client_detail(id, client_detail_params) do
       {:ok, client_detail} ->
         conn
@@ -56,6 +64,11 @@ defmodule LoanWeb.ClientDetailController do
   def show(conn, %{"id" => id}) do
     client_detail = Loans.get_client_detail!(id)
     render(conn, "show.html", client_detail: client_detail)
+  end
+
+  def show_payment_page(conn, %{"id" => id}) do
+    client_detail = Loans.get_client_detail!(id)
+    render(conn, "pay.html", client_detail: client_detail)
   end
 
   def edit(conn, %{"id" => id}) do
@@ -73,7 +86,7 @@ Logger.info "hello #{inspect(client_detail_params)}"
 
 {rate, ""} = Float.parse( Map.get(client_detail_params, "rate") )
 {principal_amount, ""} = Float.parse( Map.get(client_detail_params, "principal_amount") )
-{paid, ""} = Float.parse( Map.get(client_detail_params, "paid") )
+# {paid, ""} = Float.parse( Map.get(client_detail_params, "paid") )
 interest = principal_amount *  rate / 100
 total_amount = principal_amount + interest
 
@@ -103,6 +116,7 @@ Logger.info "--------------------------" # %{map | 2 => "two"}
         render(conn, "edit.html", client_detail: client_detail, changeset: changeset)
     end
   end
+
 
   def delete(conn, %{"id" => id}) do
     client_detail = Loans.get_client_detail!(id)

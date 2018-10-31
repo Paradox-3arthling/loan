@@ -67,23 +67,6 @@
 
 
   <div class="form-group">
-    <%= label f, :paid, class: "control-label" %>
-    <%= number_input f, :paid, step: "any", class: "form-control" %>
-    <%= error_tag f, :paid %>
-  </div>
-
-  <div class="form-group">
-    <% label f, :interest, class: "control-label" %>
-    <% text_input f, :interest, class: "form-control" %>
-    <% error_tag f, :interest %>
-  </div>
-  <div class="form-group">
-    <% label f, :total, class: "control-label" %>
-    <% text_input f, :total, class: "form-control" %>
-    <% error_tag f, :total %>
-  </div>
-
-  <div class="form-group">
     <%= submit "Submit", class: "btn btn-primary" %>
   </div>
 <% end %>

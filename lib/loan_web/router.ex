@@ -27,6 +27,7 @@ defmodule LoanWeb.Router do
 
       # resources "/users", UserController, except: [:new, :create]
       resources "/users", UserController
+      get "/client_details/:id/pay", ClientDetailController, :show_payment_page
       resources "/client_details", ClientDetailController
   end
   # Other scopes may use custom stacks.

@@ -1,3 +1,5 @@
+<span><%= link "Login", to: session_path(@conn, :new), class: "btn btn-default" %></span>
+
 <div class="container">
   <h2>New User</h2>
 
