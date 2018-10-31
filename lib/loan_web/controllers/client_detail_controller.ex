@@ -66,15 +66,43 @@ defmodule LoanWeb.ClientDetailController do
     render(conn, "show.html", client_detail: client_detail)
   end
 
-  def show_payment_page(conn, %{"id" => id}) do
-    client_detail = Loans.get_client_detail!(id)
-    render(conn, "pay.html", client_detail: client_detail)
-  end
-
   def edit(conn, %{"id" => id}) do
     client_detail = Loans.get_client_detail!(id)
     changeset = Loans.change_client_detail(client_detail)
     render(conn, "edit.html", client_detail: client_detail, changeset: changeset)
+  end
+
+  def show_payment_page(conn, %{"id" => id}) do
+    client_detail = Loans.get_client_detail!(id)
+    changeset = Loans.change_client_detail(client_detail)
+    render(conn, "pay.html", client_detail: client_detail, changeset: changeset)
+  end
+
+  def update_payment(conn, %{"id" => id, "client_detail" => client_detail_params}) do
+    client_detail = Loans.get_client_detail!(id)
+    # total = Ecto.Changeset.get_field(client_detail, :total, "")
+    total = Decimal.new(client_detail.penalties)
+    total = total * total
+    # tt = Ecto.Changeset.cast(client_detail_params, client_detail, [:penalties])
+    ################################
+    # client_detail_params = Map.put(client_detail_params, "interest", interest)
+    # client_detail_params = Map.put(client_detail_params, "total", total_amount)
+    Logger.info "--------------------------"
+    Logger.info "total paid #{inspect(client_detail)}"
+    Logger.info "--------------------------"
+    Logger.info "total #{inspect(total)}"
+    Logger.info "--------------------------"
+    Logger.info "hello #{inspect(client_detail)}"
+    Logger.info "--------------------------"
+
+    case Loans.update_client_payment(client_detail, client_detail_params) do
+      {:ok, client_detail} ->
+        conn
+        |> put_flash(:info, "Client payment successfully paid.")
+        |> redirect(to: client_detail_path(conn, :show, client_detail))
+      {:error, %Ecto.Changeset{} = changeset} ->
+        render(conn, "pay.html", client_detail: client_detail, changeset: changeset)
+    end
   end
 
   def update(conn, %{"id" => id, "client_detail" => client_detail_params}) do

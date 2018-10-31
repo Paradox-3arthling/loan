@@ -77,6 +77,11 @@ defmodule Loan.Loans do
     |> ClientDetail.changeset(attrs)
     |> Repo.update()
   end
+  def update_client_payment(%ClientDetail{} = client_detail, attrs) do
+    client_detail
+    |> ClientDetail.changeset_payment(attrs)
+    |> Repo.update()
+  end
 
   @doc """
   Deletes a ClientDetail.

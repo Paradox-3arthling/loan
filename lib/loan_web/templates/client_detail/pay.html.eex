@@ -70,13 +70,11 @@
 
   </ul>
     <h2>Payment detail</h2>
-    <%= form_for @conn, client_detail_path(@conn, :update, @client_detail), [method: :update, as: :user], fn f -> %>
 
-
-
+    <%= form_for @changeset, client_detail_path(@conn, :update_payment, @client_detail), fn f -> %>
     <div class="form-group">
       <label>Amount paid :</label>
-      <%= text_input f, :paid, class: "form-control", placeholder: 0 %>
+      <%= text_input f, :paid, class: "form-control", Placeholder: 0 %>
       <%= error_tag f, :paid %>
     </div>
 

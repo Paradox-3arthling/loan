@@ -31,7 +31,15 @@ defmodule Loan.Loans.ClientDetail do
   def changeset(client_detail, attrs) do
     client_detail
     |> cast(attrs, [:registration_number, :name, :paydate, :principal_amount, :rate, :paid, :total_paid, :penalties, :total, :residence, :mobile_number, :interest, :active, :day_not_paid, :guarantor, :identification_number])
-    |> validate_required([:registration_number, :name, :paydate, :principal_amount, :rate, :paid, :total_paid, :penalties, :total, :residence, :mobile_number, :interest, :active, :day_not_paid, :guarantor, :identification_number])
+    # |> validate_required([:registration_number, :name, :paydate, :principal_amount, :rate, :paid, :total_paid, :penalties, :total, :residence, :mobile_number, :interest, :active, :day_not_paid, :guarantor, :identification_number])
+    |> validate_required([:registration_number, :name, :paydate, :principal_amount, :rate, :penalties])
     |> unique_constraint(:registration_number)
+  end
+
+  @doc false
+  def changeset_payment(client_detail, attrs) do
+    client_detail
+    |> cast(attrs, [:paid])
+    |> validate_required([:paid])
   end
 end
