@@ -38,9 +38,19 @@ defmodule Loan.Loans.ClientDetail do
 
   @doc false
   def changeset_payment(client_detail, attrs, total) do
+    total = total + 0.0001
     client_detail
     |> cast(attrs, [:paid, :total_paid, :total])
     |> validate_required([:paid])
     |> validate_number(:paid, less_than: total)
+  #   |> validate_from_s3_bucket(:paid)
+  # end
+  # def validate_from_s3_bucket(changeset, field, options \\ []) do
+  #   validate_change(changeset, field, fn _, url ->
+  #     case String.starts_with?(url, @our_url) do
+  #       true -> []
+  #       false -> [{field, options[:message] || "Unexpected URL"}]
+  #     end
+  #   end)
   end
 end

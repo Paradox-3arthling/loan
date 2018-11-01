@@ -29,7 +29,6 @@ defmodule LoanWeb.Router do
       resources "/users", UserController
       # post "/client_details/:id", ClientDetailController, :show_payment_page
       resources "/client_details", ClientDetailController
-      post "/client_details/:id", ClientDetailController, :update
       put "/client_details/pay/:id", ClientDetailController, :update_payment
       get "/client_details/pay/:id", ClientDetailController, :show_payment_page
   end
