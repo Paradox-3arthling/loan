@@ -29,21 +29,6 @@
     </li>
 
     <li>
-      <strong>Principal amount:</strong>
-      <%= @client_detail.principal_amount %>
-    </li>
-
-    <li>
-      <strong>Interest:</strong>
-      <%= @client_detail.interest %>
-    </li>
-
-    <li>
-      <strong>Total:</strong>
-      <%= @client_detail.total %>
-    </li>
-
-    <li>
       <strong>Guarantor:</strong>
       <%= @client_detail.guarantor %>
     </li>
@@ -66,6 +51,21 @@
     <li>
       <strong>Penalties:</strong>
       <%= @client_detail.penalties %>
+    </li>
+
+    <li>
+      <strong>Principal amount:</strong>
+      <%= @client_detail.principal_amount %>
+    </li>
+
+    <li>
+      <strong>Interest:</strong>
+      <%= @client_detail.interest %>
+    </li>
+
+    <li>
+      <strong>Total:</strong>
+      <%= @client_detail.total %>
     </li>
 
   </ul>

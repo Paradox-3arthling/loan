@@ -37,9 +37,10 @@ defmodule Loan.Loans.ClientDetail do
   end
 
   @doc false
-  def changeset_payment(client_detail, attrs) do
+  def changeset_payment(client_detail, attrs, total) do
     client_detail
-    |> cast(attrs, [:paid])
+    |> cast(attrs, [:paid, :total_paid, :total])
     |> validate_required([:paid])
+    |> validate_number(:paid, less_than: total)
   end
 end

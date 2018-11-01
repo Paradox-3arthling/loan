@@ -80,25 +80,44 @@ defmodule LoanWeb.ClientDetailController do
 
   def update_payment(conn, %{"id" => id, "client_detail" => client_detail_params}) do
     client_detail = Loans.get_client_detail!(id)
-    # total = Ecto.Changeset.get_field(client_detail, :total, "")
-    total = Decimal.new(client_detail.penalties)
-    total = total * total
-    # tt = Ecto.Changeset.cast(client_detail_params, client_detail, [:penalties])
+    # changeset = Loans.change_client_detail(client_detail)
+
+    total = Decimal.to_float(client_detail.total)
+    total_db = Decimal.to_float(client_detail.total)
+    total_payment = Decimal.to_float(client_detail.total_paid)
+    {payment, ""} = Float.parse(client_detail_params["paid"])
+    total = total - payment
+    total_payment = total_payment + payment
     ################################
-    # client_detail_params = Map.put(client_detail_params, "interest", interest)
-    # client_detail_params = Map.put(client_detail_params, "total", total_amount)
+    client_detail_params = Map.put(client_detail_params, "total", total)
+    client_detail_params = Map.put(client_detail_params, "total_payment", total_payment)
+
     Logger.info "--------------------------"
-    Logger.info "total paid #{inspect(client_detail)}"
+    Logger.info "total payment #{inspect(client_detail_params)}"
     Logger.info "--------------------------"
-    Logger.info "total #{inspect(total)}"
+    Logger.info "total #{inspect(client_detail)}"
     Logger.info "--------------------------"
-    Logger.info "hello #{inspect(client_detail)}"
+    Logger.info "payment #{inspect(payment)}"
     Logger.info "--------------------------"
 
-    case Loans.update_client_payment(client_detail, client_detail_params) do
+    ################################
+    # if total < 0 do
+    # Logger.info "payment #{inspect(payment)}"
+    # Logger.info "--------------------------"
+    #   conn
+    #   |> put_flash(:error, "Login required")
+    #   |> redirect(to: "/client_details/pay/#{id}")
+    #   |> halt()
+    #   # conn
+    #   # |> put_flash(:error, "The client is overpaying")
+    #   # # |> render("pay.html", client_detail: client_detail, changeset: changeset)
+    #   # |> halt()
+    # end
+    case Loans.update_client_payment(client_detail, client_detail_params, total_db) do
       {:ok, client_detail} ->
         conn
         |> put_flash(:info, "Client payment successfully paid.")
+        |> put_layout("app.html")
         |> redirect(to: client_detail_path(conn, :show, client_detail))
       {:error, %Ecto.Changeset{} = changeset} ->
         render(conn, "pay.html", client_detail: client_detail, changeset: changeset)
