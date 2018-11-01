@@ -7,7 +7,13 @@ To start your Phoenix server:
   * Start Phoenix endpoint with `mix phx.server`
 
 Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
-
+  
+  * Purpose is to make a system that manages a user's clients to whom they have loaned money...
+     ... currently works on assumption of 30 days period... will make it dynamic soon
+  * In future maybe a platform for letting user's be able to loan to one another and being updated 
+    on people who iwe you
+    
+    
 Ready to run in production? Please [check our deployment guides](http://www.phoenixframework.org/docs/deployment).
 
 ## Learn more
