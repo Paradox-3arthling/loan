@@ -50,7 +50,7 @@ defmodule Loan.Loans.ClientDetail do
   def changeset_payment(client_detail, attrs, total) do
     total = total + 0.0001
     client_detail
-    |> cast(attrs, [:paid, :total_paid, :total])
+    |> cast(attrs, [:paid, :total_paid, :total, :paydate])
     |> validate_required([:paid])
     |> validate_number(:paid, less_than: total)
     |> validate_number(:paid, greater_than: 0)

@@ -86,24 +86,30 @@ defmodule LoanWeb.ClientDetailController do
 
   def update_payment(conn, %{"id" => id, "client_detail" => client_detail_params}) do
     client_detail = Loans.get_client_detail!(id)
+    ################################
+    Logger.info "--------------------------"
+    Logger.info "total payment #{inspect(client_detail)}"
 
     total = Decimal.to_float(client_detail.total)
     total_db = Decimal.to_float(client_detail.total)
     total_paid = Decimal.to_float(client_detail.total_paid)
-    date = Date.add(client_detail.date, 30)
+    date = Date.add(client_detail.paydate, 30)
+    date_map = %{"day" => Integer.to_string(date.day), "month" => Integer.to_string(date.month), "year" => Integer.to_string(date.year)}
 
     case  Float.parse(client_detail_params["paid"]) do
         {payment, ""} -> total = total - payment
             total_paid = total_paid + payment
             ################################
             Logger.info "--------------------------"
-            Logger.info "total payment #{inspect(date)}"
+            Logger.info "total payment #{inspect(date_map)}"
+            # client_detail_params = put_in client_detail_params["paydate"]["day"], date.day
 
             client_detail_params = Map.put(client_detail_params, "total", total)
             client_detail_params = Map.put(client_detail_params, "total_paid", total_paid)
-            client_detail_params = put_in client_detail_params["paydate"]["day"], date.day
-            client_detail_params = put_in client_detail_params["paydate"]["month"], date.month
-            client_detail_params = put_in client_detail_params["paydate"]["year"], date.year
+            client_detail_params = put_in client_detail_params["paydate"], date_map
+            # client_detail_params = put_in client_detail_params["paydate"]["day"], date.day
+            # client_detail_params = put_in client_detail_params["paydate"]["month"], date.month
+            # client_detail_params = put_in client_detail_params["paydate"]["year"], date.year
             ################################
             Logger.info "--------------------------"
             Logger.info "total payment #{inspect(client_detail_params)}"
@@ -152,7 +158,7 @@ Logger.info "hello #{inspect(client_detail_params)}"
   end
 
 
-  def delete(conn,id) do
+  def delete(conn, %{"id" => id}) do
     client_detail = Loans.get_client_detail!(id)
     ################################
     Logger.info "--------------------------"
