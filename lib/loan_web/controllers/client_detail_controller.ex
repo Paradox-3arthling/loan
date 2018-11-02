@@ -90,16 +90,20 @@ defmodule LoanWeb.ClientDetailController do
     total = Decimal.to_float(client_detail.total)
     total_db = Decimal.to_float(client_detail.total)
     total_paid = Decimal.to_float(client_detail.total_paid)
+    date = Date.add(client_detail.date, 30)
 
     case  Float.parse(client_detail_params["paid"]) do
         {payment, ""} -> total = total - payment
             total_paid = total_paid + payment
             ################################
             Logger.info "--------------------------"
-            Logger.info "total payment #{inspect(client_detail_params)}"
+            Logger.info "total payment #{inspect(date)}"
 
             client_detail_params = Map.put(client_detail_params, "total", total)
             client_detail_params = Map.put(client_detail_params, "total_paid", total_paid)
+            client_detail_params = put_in client_detail_params["paydate"]["day"], date.day
+            client_detail_params = put_in client_detail_params["paydate"]["month"], date.month
+            client_detail_params = put_in client_detail_params["paydate"]["year"], date.year
             ################################
             Logger.info "--------------------------"
             Logger.info "total payment #{inspect(client_detail_params)}"

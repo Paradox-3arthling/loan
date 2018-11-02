@@ -22,5 +22,6 @@ defmodule Loan.Accounts.User do
     |> validate_required([:name, :email])
     |> unique_constraint(:email)
     |> unique_constraint(:mobileNo)
+    |> validate_format(:email, ~r/@/)
   end
 end
