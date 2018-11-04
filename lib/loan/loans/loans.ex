@@ -17,11 +17,11 @@ defmodule Loan.Loans do
       [%ClientDetail{}, ...]
 
   """
-  def list_client_details(user_id) do
-    # Repo.all(ClientDetail)
+  def list_client_details() do
+    Repo.all(ClientDetail)
 
-    Repo.all(from c in ClientDetail,
-          where: c.user_id == ^user_id)
+    # Repo.all(from c in ClientDetail,
+    #       where: c.user_id == ^user_id)
   end
 
   @doc """

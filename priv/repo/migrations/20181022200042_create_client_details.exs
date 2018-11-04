@@ -19,6 +19,8 @@ defmodule Loan.Repo.Migrations.CreateClientDetails do
       add :active, :boolean, default: true
       add :initial_total_paid, :decimal, default: 0
       add :total_paid, :decimal, default: 0
+      add :total_penalty, :decimal, default: 0
+      add :total_without_penalty, :decimal, default: 0   
       add :user_id, references(:users, on_delete: :delete_all), null: false
 
       timestamps()

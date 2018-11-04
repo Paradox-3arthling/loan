@@ -7,7 +7,10 @@ defmodule LoanWeb.ClientDetailController do
   alias Loan.Loans.ClientDetail
 
   def index(conn, _params) do
-    client_details = Loans.list_client_details(get_session(conn, :user_id))
+    client_details = Loans.list_client_details()
+      # client_details = Loans.list_client_details(get_session(conn, :user_id))
+      Logger.info "--------------------------"
+      Logger.info "hello #{inspect(client_details)}"
     render(conn, "index.html", client_details: client_details)
   end
 
@@ -34,9 +37,7 @@ defmodule LoanWeb.ClientDetailController do
         interest = principal_amount *  rate / 100
         total_amount = principal_amount + interest
         random_number = Integer.to_string(:rand.uniform(1000))
-        registration_number = client_detail_params["paydate"]["month"] <> "/" <> client_detail_params["paydate"]["day"] <> "/" <> random_number
-        Logger.info "--------------------------"
-        Logger.info "hello #{inspect(registration_number)}"
+        registration_number = client_detail_params["paydate"]["day"] <> "/" <> client_detail_params["paydate"]["month"] <> "/" <> random_number
         # %{map | "in" => "two"}  # for updating maps
         client_detail_params = Map.put(client_detail_params, "interest", interest)
         client_detail_params = put_in client_detail_params["registration_number"], registration_number

@@ -10,17 +10,15 @@
     <tr>
       <th>Reg. number</th>
       <th>Name</th>
-      <th>ID number</th>
-      <th>Mobile number</th>
       <th>Paydate</th>
       <th>Principal amount</th>
       <th>Interest</th>
-      <th>Initial Total</th>
-      <th>Current Total</th>
+      <th>Total(without Penalty)</th>
+      <th>Total Penalty</th>
       <th>Total Paid</th>
+      <th>Total</th>
       <th>Days not paid</th>
-      <th>Rate</th>
-      <th>Penalties</th>
+      <th>Controls</th>
 
       <th></th>
     </tr>
@@ -30,26 +28,36 @@
     <tr>
       <td><%= client_detail.registration_number %></td>
       <td><%= client_detail.name %></td>
-      <td><%= client_detail.identification_number %></td>
-      <td><%= client_detail.mobile_number %></td>
       <td><%= client_detail.paydate %></td>
       <td><%= client_detail.principal_amount %></td>
       <td><%= client_detail.interest %></td>
-      <td><%= client_detail.initial_total_paid %></td>
-      <td><%= client_detail.total %></td>
+      <td><%= client_detail.total_without_penalty %></td>
+      <td><%= client_detail.total_penalty %></td>
       <td><%= client_detail.total_paid %></td>
+      <td><%= client_detail.total %></td>
       <td><%= client_detail.day_not_paid %></td>
-      <td><%= client_detail.rate %></td>
-      <td><%= client_detail.penalties %></td>
 
       <td class="text-right">
-        <span><%= link "Pay Due's", to: client_detail_path(@conn, :show_payment_page, client_detail), class: "btn btn-default btn-xs" %></span>
+        <span><%= link "Pay Due's", to: client_detail_path(@conn, :show_payment_page, client_detail), class: "btn btn-primary btn-xs" %></span>
         <span><%= link "Edit", to: client_detail_path(@conn, :edit, client_detail), class: "btn btn-default btn-xs" %></span>
         <span><%= link "Delete", to: client_detail_path(@conn, :delete, client_detail), method: :delete, data: [confirm: "Are you sure?"], class: "btn btn-danger btn-xs" %></span>
         </td>
     </tr>
 <% end %>
+
+    <tr>
+      <td></td>
+      <td>Totals</td>
+      <td></td>
+      <td><%= :erlang.float_to_binary Enum.reduce(@client_details, 0, fn(x, acc) -> Decimal.to_float(x.principal_amount) + acc end),[decimals: 2] %></td>
+      <td><%= :erlang.float_to_binary Enum.reduce(@client_details, 0, fn(x, acc) -> Decimal.to_float(x.interest) + acc end),[decimals: 2] %></td>
+      <td><%= :erlang.float_to_binary Enum.reduce(@client_details, 0, fn(x, acc) -> Decimal.to_float(x.total_without_penalty) + acc end),[decimals: 2] %></td>
+      <td><%= :erlang.float_to_binary Enum.reduce(@client_details, 0, fn(x, acc) -> Decimal.to_float(x.total_penalty) + acc end),[decimals: 2] %></td>
+      <td><%= :erlang.float_to_binary Enum.reduce(@client_details, 0, fn(x, acc) -> Decimal.to_float(x.total_paid) + acc end),[decimals: 2] %></td>
+      <td><%= :erlang.float_to_binary Enum.reduce(@client_details, 0, fn(x, acc) -> Decimal.to_float(x.total) + acc end),[decimals: 2] %></td>
+      <td></td>
+  </tr>
   </tbody>
 </table>
 
-<span><%= link "New Client detail", to: client_detail_path(@conn, :new) %></span>
+<span><%= link "New Client detail", to: client_detail_path(@conn, :new), class: "btn btn-info btn-sm" %></span>

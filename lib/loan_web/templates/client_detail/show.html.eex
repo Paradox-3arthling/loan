@@ -78,11 +78,17 @@
       <%= @client_detail.total_paid %>
     </li>
 
+    <li>
+      <strong>Total Penalty:</strong>
+      <%= @client_detail.total_penalty %>
+    </li>
+
+
   </ul>
 
       <span><%= link "Edit", to: client_detail_path(@conn, :edit, @client_detail), class: "btn btn-link btn-sm" %></span>
-      <span><%= link "Back", to: client_detail_path(@conn, :index), class: "btn btn-link btn-sm" %></span>
-      <span><%= link "Pay Due's", to: client_detail_path(@conn, :show_payment_page, @client_detail), class: "btn btn-primary btn-sm" %></span>
+      <span><%= link "List ya Clients", to: client_detail_path(@conn, :index), class: "btn btn-info btn-sm" %></span>
+      <span><%= link "Kulipa", to: client_detail_path(@conn, :show_payment_page, @client_detail), class: "btn btn-primary btn-sm" %></span>
 
 
 </div>

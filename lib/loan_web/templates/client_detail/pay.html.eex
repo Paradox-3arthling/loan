@@ -76,6 +76,10 @@
       <strong>Total Paid:</strong>
       <%= @client_detail.total_paid %>
     </li>
+    <li>
+      <strong>Total Penalty:</strong>
+      <%= @client_detail.total_penalty %>
+    </li>
 
   </ul>
     <h2>Payment detail</h2>

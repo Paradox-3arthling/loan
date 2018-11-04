@@ -20,6 +20,8 @@ defmodule Loan.Loans.ClientDetail do
     field :residence, :string
     field :total, :decimal
     field :total_paid, :decimal
+    field :total_penalty, :decimal
+    field :total_without_penalty, :decimal
     field :initial_total_paid, :decimal
     belongs_to :user, User
     field :paid, :decimal, virtual: true
@@ -50,7 +52,7 @@ defmodule Loan.Loans.ClientDetail do
   def changeset_payment(client_detail, attrs, total) do
     total = total + 0.0001
     client_detail
-    |> cast(attrs, [:paid, :total_paid, :total, :paydate])
+    |> cast(attrs, [:paid, :total_paid, :total, :paydate, :total_penalty, :total_without_penalty])
     |> validate_required([:paid])
     |> validate_number(:paid, less_than: total)
     |> validate_number(:paid, greater_than: 0)
