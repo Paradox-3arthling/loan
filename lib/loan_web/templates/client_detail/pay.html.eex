@@ -38,6 +38,11 @@
     </li>
 
     <li>
+      <strong>Monthly Payable:</strong>
+      <%= @client_detail.monthly_payable %>
+    </li>
+
+    <li>
       <strong>Current Total:</strong>
       <%= @client_detail.total %>
     </li>

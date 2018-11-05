@@ -5,7 +5,7 @@ defmodule Loan.Loans.ClientDetail do
 
 
   schema "client_details" do
-    field :active, :boolean, default: false
+    field :active, :boolean, default: true
     field :day_not_paid, :decimal
     field :guarantor, :string
     field :identification_number, :string
@@ -19,6 +19,7 @@ defmodule Loan.Loans.ClientDetail do
     field :registration_number, :string
     field :residence, :string
     field :total, :decimal
+    field :monthly_payable, :decimal
     field :total_paid, :decimal
     field :total_penalty, :decimal
     field :total_without_penalty, :decimal
@@ -32,7 +33,7 @@ defmodule Loan.Loans.ClientDetail do
   @doc false
   def changeset(client_detail, attrs) do
     client_detail
-    |> cast(attrs, [:initial_total_paid, :registration_number, :name, :paydate, :principal_amount, :rate, :paid, :total_paid, :penalties, :total, :residence, :mobile_number, :interest, :active, :day_not_paid, :guarantor, :identification_number])
+    |> cast(attrs, [:monthly_payable, :total_without_penalty, :initial_total_paid, :registration_number, :name, :paydate, :principal_amount, :rate, :paid, :total_paid, :penalties, :total, :residence, :mobile_number, :interest, :active, :day_not_paid, :guarantor, :identification_number])
     # |> validate_required([:registration_number, :name, :paydate, :principal_amount, :rate, :paid, :total_paid, :penalties, :total, :residence, :mobile_number, :interest, :active, :day_not_paid, :guarantor, :identification_number])
     |> validate_required([:registration_number, :name, :paydate, :principal_amount, :rate, :penalties])
     |> validate_number(:principal_amount, greater_than: 0)
@@ -52,7 +53,7 @@ defmodule Loan.Loans.ClientDetail do
   def changeset_payment(client_detail, attrs, total) do
     total = total + 0.0001
     client_detail
-    |> cast(attrs, [:paid, :total_paid, :total, :paydate, :total_penalty, :total_without_penalty])
+    |> cast(attrs, [:monthly_payable, :paid, :total_paid, :total, :paydate, :total_penalty, :total_without_penalty])
     |> validate_required([:paid])
     |> validate_number(:paid, less_than: total)
     |> validate_number(:paid, greater_than: 0)

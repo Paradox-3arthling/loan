@@ -44,6 +44,11 @@
     </li>
 
     <li>
+      <strong>Monthly Payable:</strong>
+      <%= @client_detail.monthly_payable %>
+    </li>
+
+    <li>
       <strong>Initial Total :</strong>
       <%= @client_detail.initial_total_paid %>
     </li>

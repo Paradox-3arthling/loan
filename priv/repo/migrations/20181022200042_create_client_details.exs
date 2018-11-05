@@ -11,6 +11,7 @@ defmodule Loan.Repo.Migrations.CreateClientDetails do
       add :principal_amount, :decimal, default: 0
       add :interest, :decimal, default: 0
       add :total, :decimal, default: 0
+      add :monthly_payable, :decimal, default: 0 
       add :guarantor, :string, default: ""
       add :residence, :string, default: ""
       add :day_not_paid, :decimal, default: 0
@@ -20,7 +21,7 @@ defmodule Loan.Repo.Migrations.CreateClientDetails do
       add :initial_total_paid, :decimal, default: 0
       add :total_paid, :decimal, default: 0
       add :total_penalty, :decimal, default: 0
-      add :total_without_penalty, :decimal, default: 0   
+      add :total_without_penalty, :decimal, default: 0
       add :user_id, references(:users, on_delete: :delete_all), null: false
 
       timestamps()

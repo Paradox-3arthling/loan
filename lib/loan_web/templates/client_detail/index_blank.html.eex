@@ -47,19 +47,6 @@
         </td>
     </tr>
 <% end %>
-<tr>
-  <td></td>
-  <td><b>Totals :</b></td>
-  <td></td>
-  <td><%= :erlang.float_to_binary Enum.reduce(@client_details, 0, fn(x, acc) -> Decimal.to_float(x.principal_amount) + acc end),[decimals: 2] %></td>
-  <td><%= :erlang.float_to_binary Enum.reduce(@client_details, 0, fn(x, acc) -> Decimal.to_float(x.interest) + acc end),[decimals: 2] %></td>
-  <td><%= :erlang.float_to_binary Enum.reduce(@client_details, 0, fn(x, acc) -> Decimal.to_float(x.total_without_penalty) + acc end),[decimals: 2] %></td>
-  <td><%= :erlang.float_to_binary Enum.reduce(@client_details, 0, fn(x, acc) -> Decimal.to_float(x.total_penalty) + acc end),[decimals: 2] %></td>
-  <td><%= :erlang.float_to_binary Enum.reduce(@client_details, 0, fn(x, acc) -> Decimal.to_float(x.total_paid) + acc end),[decimals: 2] %></td>
-  <td><%= :erlang.float_to_binary Enum.reduce(@client_details, 0, fn(x, acc) -> Decimal.to_float(x.total) + acc end),[decimals: 2] %></td>
-  <td><%= :erlang.float_to_binary Enum.reduce(@client_details, 0, fn(x, acc) -> Decimal.to_float(x.monthly_payable) + acc end),[decimals: 2] %></td>
-  <td></td>
-</tr>
   </tbody>
 </table>
 <div class="container">

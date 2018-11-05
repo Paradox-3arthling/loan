@@ -9,9 +9,11 @@ defmodule LoanWeb.ClientDetailController do
   def index(conn, _params) do
     client_details = Loans.list_client_details()
       # client_details = Loans.list_client_details(get_session(conn, :user_id))
-      Logger.info "--------------------------"
-      Logger.info "hello #{inspect(client_details)}"
-    render(conn, "index.html", client_details: client_details)
+    if client_details == [] do
+      render(conn, "index_blank.html", client_details: client_details)
+    else
+      render(conn, "index.html", client_details: client_details)
+    end
   end
 
   def new(conn, _params) do
@@ -42,6 +44,8 @@ defmodule LoanWeb.ClientDetailController do
         client_detail_params = Map.put(client_detail_params, "interest", interest)
         client_detail_params = put_in client_detail_params["registration_number"], registration_number
         client_detail_params = put_in client_detail_params["total"], total_amount
+        client_detail_params = put_in client_detail_params["monthly_payable"], interest
+        client_detail_params = put_in client_detail_params["total_without_penalty"], total_amount
         client_detail_params = put_in client_detail_params["initial_total_paid"], total_amount
         client_detail_params = put_in client_detail_params["paydate"]["day"], date.day
         client_detail_params = put_in client_detail_params["paydate"]["month"], date.month
@@ -70,6 +74,10 @@ defmodule LoanWeb.ClientDetailController do
 
   def show(conn, %{"id" => id}) do
     client_detail = Loans.get_client_detail!(id)
+    ################################
+    Logger.info "--------------------------"
+    Logger.info "total payment #{inspect(client_detail)}"
+
     render(conn, "show.html", client_detail: client_detail)
   end
 
@@ -87,33 +95,62 @@ defmodule LoanWeb.ClientDetailController do
 
   def update_payment(conn, %{"id" => id, "client_detail" => client_detail_params}) do
     client_detail = Loans.get_client_detail!(id)
-    ################################
-    Logger.info "--------------------------"
-    Logger.info "total payment #{inspect(client_detail)}"
+
+    minimum_payment = Decimal.to_float(client_detail.monthly_payable)
 
     total = Decimal.to_float(client_detail.total)
     total_db = Decimal.to_float(client_detail.total)
     total_paid = Decimal.to_float(client_detail.total_paid)
+    total_without_penalty = Decimal.to_float(client_detail.total_without_penalty)
+    penalties = Decimal.to_float(client_detail.total_penalty)
     date = Date.add(client_detail.paydate, 30)
     date_map = %{"day" => Integer.to_string(date.day), "month" => Integer.to_string(date.month), "year" => Integer.to_string(date.year)}
 
     case  Float.parse(client_detail_params["paid"]) do
         {payment, ""} -> total = total - payment
             total_paid = total_paid + payment
+            total_without_penalty = total_without_penalty - (payment - penalties)
+            penalties = penalties - payment
             ################################
             Logger.info "--------------------------"
-            Logger.info "total payment #{inspect(date_map)}"
-            # client_detail_params = put_in client_detail_params["paydate"]["day"], date.day
+            Logger.info "payment #{inspect(payment)}"
+            ################################
+            Logger.info "--------------------------"
+            Logger.info "minimum payment : #{inspect(minimum_payment)}"
+            Logger.info "--------------------------"
+            Logger.info "--------------------------"
+            Logger.info "before payment : #{inspect(client_detail_params)}"
+            Logger.info "--------------------------"
+
 
             client_detail_params = Map.put(client_detail_params, "total", total)
             client_detail_params = Map.put(client_detail_params, "total_paid", total_paid)
-            client_detail_params = put_in client_detail_params["paydate"], date_map
-            # client_detail_params = put_in client_detail_params["paydate"]["day"], date.day
-            # client_detail_params = put_in client_detail_params["paydate"]["month"], date.month
-            # client_detail_params = put_in client_detail_params["paydate"]["year"], date.year
-            ################################
+            # client_detail_params = Map.put(client_detail_params, "total_without_penalty", total_without_penalty)
+            client_detail_params =
+            if penalties <= 0 do
+              client_detail_params
+              |> Map.put("total_without_penalty", total_without_penalty)
+              |> Map.put("total_penalty", 0)
+            else
+              client_detail_params
+              |> Map.put("monthly_payable", minimum_payment - payment)
+              |> Map.put("total_penalty", penalties)
+            end
+            client_detail_params =
+            if payment >= minimum_payment do
+              put_in client_detail_params["paydate"], date_map
+            else
+              put_in client_detail_params["monthly_payable"], minimum_payment - payment
+            end
+            client_detail_params =
+            if payment >= minimum_payment do
+              put_in client_detail_params["monthly_payable"], client_detail.interest
+            else
+              client_detail_params
+            end
+
+            Logger.info "after payment : #{inspect(client_detail_params)}"
             Logger.info "--------------------------"
-            Logger.info "total payment #{inspect(client_detail_params)}"
 
             case Loans.update_client_payment(client_detail, client_detail_params, total_db) do
               {:ok, client_detail} ->

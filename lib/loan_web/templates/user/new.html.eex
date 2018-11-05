@@ -1,6 +1,7 @@
-<span><%= link "Login", to: session_path(@conn, :new), class: "btn btn-default" %></span>
 
 <div class="container">
+  <span><%= link "Login", to: session_path(@conn, :new), class: "btn btn-default" %></span>
+
   <h2>New User</h2>
 
   <%= render "form.html", Map.put(assigns, :action, user_path(@conn, :create)) %>
