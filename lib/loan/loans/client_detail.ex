@@ -2,7 +2,7 @@ defmodule Loan.Loans.ClientDetail do
   use Ecto.Schema
   import Ecto.Changeset
   alias Loan.Accounts.User
-
+  alias Loan.Loans.ClientInformation
 
   schema "client_details" do
     field :active, :boolean, default: true
@@ -25,6 +25,7 @@ defmodule Loan.Loans.ClientDetail do
     field :total_without_penalty, :decimal
     field :initial_total_paid, :decimal
     belongs_to :user, User
+    has_many :client_information, ClientInformation
     field :paid, :decimal, virtual: true
 
     timestamps()

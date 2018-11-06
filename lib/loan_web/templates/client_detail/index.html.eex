@@ -42,7 +42,7 @@
 
       <td class="text-right">
         <span><%= link "Pay Due's", to: client_detail_path(@conn, :show_payment_page, client_detail), class: "btn btn-primary btn-xs" %></span>
-        <span><%= link "Edit", to: client_detail_path(@conn, :edit, client_detail), class: "btn btn-default btn-xs" %></span>
+        <span><%= link "Show", to: client_detail_path(@conn, :show, client_detail), class: "btn btn-default btn-xs" %></span>
         <span><%= link "Delete", to: client_detail_path(@conn, :delete, client_detail), method: :delete, data: [confirm: "Are you sure?"], class: "btn btn-danger btn-xs" %></span>
         </td>
     </tr>

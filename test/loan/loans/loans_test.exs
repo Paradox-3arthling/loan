@@ -88,4 +88,66 @@ defmodule Loan.LoansTest do
       assert %Ecto.Changeset{} = Loans.change_client_detail(client_detail)
     end
   end
+
+  describe "client_information" do
+    alias Loan.Loans.ClientInformation
+
+    @valid_attrs %{payment_amount: "120.5", payment_type: "some payment_type"}
+    @update_attrs %{payment_amount: "456.7", payment_type: "some updated payment_type"}
+    @invalid_attrs %{payment_amount: nil, payment_type: nil}
+
+    def client_information_fixture(attrs \\ %{}) do
+      {:ok, client_information} =
+        attrs
+        |> Enum.into(@valid_attrs)
+        |> Loans.create_client_information()
+
+      client_information
+    end
+
+    test "list_client_information/0 returns all client_information" do
+      client_information = client_information_fixture()
+      assert Loans.list_client_information() == [client_information]
+    end
+
+    test "get_client_information!/1 returns the client_information with given id" do
+      client_information = client_information_fixture()
+      assert Loans.get_client_information!(client_information.id) == client_information
+    end
+
+    test "create_client_information/1 with valid data creates a client_information" do
+      assert {:ok, %ClientInformation{} = client_information} = Loans.create_client_information(@valid_attrs)
+      assert client_information.payment_amount == Decimal.new("120.5")
+      assert client_information.payment_type == "some payment_type"
+    end
+
+    test "create_client_information/1 with invalid data returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} = Loans.create_client_information(@invalid_attrs)
+    end
+
+    test "update_client_information/2 with valid data updates the client_information" do
+      client_information = client_information_fixture()
+      assert {:ok, client_information} = Loans.update_client_information(client_information, @update_attrs)
+      assert %ClientInformation{} = client_information
+      assert client_information.payment_amount == Decimal.new("456.7")
+      assert client_information.payment_type == "some updated payment_type"
+    end
+
+    test "update_client_information/2 with invalid data returns error changeset" do
+      client_information = client_information_fixture()
+      assert {:error, %Ecto.Changeset{}} = Loans.update_client_information(client_information, @invalid_attrs)
+      assert client_information == Loans.get_client_information!(client_information.id)
+    end
+
+    test "delete_client_information/1 deletes the client_information" do
+      client_information = client_information_fixture()
+      assert {:ok, %ClientInformation{}} = Loans.delete_client_information(client_information)
+      assert_raise Ecto.NoResultsError, fn -> Loans.get_client_information!(client_information.id) end
+    end
+
+    test "change_client_information/1 returns a client_information changeset" do
+      client_information = client_information_fixture()
+      assert %Ecto.Changeset{} = Loans.change_client_information(client_information)
+    end
+  end
 end

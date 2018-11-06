@@ -38,7 +38,7 @@
     </li>
 
     <li>
-      <strong>Monthly Payable:</strong>
+      <strong>Monthly Minimum:</strong>
       <%= @client_detail.monthly_payable %>
     </li>
 

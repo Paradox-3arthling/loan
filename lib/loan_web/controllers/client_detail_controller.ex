@@ -77,7 +77,12 @@ defmodule LoanWeb.ClientDetailController do
     ################################
     Logger.info "--------------------------"
     Logger.info "total payment #{inspect(client_detail)}"
+    if client_detail == [] do
+      ################################
+      Logger.info "--------------------------"
+      Logger.info "Suck my spaghetti meat "
 
+    end
     render(conn, "show.html", client_detail: client_detail)
   end
 
@@ -112,8 +117,11 @@ defmodule LoanWeb.ClientDetailController do
             total_without_penalty = total_without_penalty - (payment - penalties)
             penalties = penalties - payment
             ################################
+            user_id = get_session(conn, :user_id)
+            link_insertion = %{"user_id" => user_id, "client_detail_id" => id, "payment_type" => "Payment", "total_db" => total_db, "payment_amount" => payment}
+
             Logger.info "--------------------------"
-            Logger.info "payment #{inspect(payment)}"
+            Logger.info "link_insertion #{inspect(link_insertion)}"
             ################################
             Logger.info "--------------------------"
             Logger.info "minimum payment : #{inspect(minimum_payment)}"
@@ -154,6 +162,7 @@ defmodule LoanWeb.ClientDetailController do
 
             case Loans.update_client_payment(client_detail, client_detail_params, total_db) do
               {:ok, client_detail} ->
+                Loans.create_client_information(link_insertion)
                 conn
                 |> put_flash(:info, "Client payment successfully procesed!")
                 |> put_layout("app.html")
