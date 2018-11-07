@@ -38,13 +38,13 @@
     </li>
 
     <li>
-      <strong>Monthly Minimum:</strong>
-      <%= @client_detail.monthly_payable %>
+      <strong>Current Total:</strong>
+      <%= @client_detail.total %>
     </li>
 
     <li>
-      <strong>Current Total:</strong>
-      <%= @client_detail.total %>
+      <strong>Monthly Minimum:</strong>
+      <%= @client_detail.monthly_payable %>
     </li>
 
     <li>
@@ -81,12 +81,19 @@
       <strong>Total Paid:</strong>
       <%= @client_detail.total_paid %>
     </li>
+
     <li>
       <strong>Total Penalty:</strong>
       <%= @client_detail.total_penalty %>
     </li>
+    <li>
+      <strong>Registered by:</strong>
+      <%= @client_detail.user.name %>
+    </li>
+
 
   </ul>
+
     <h2>Payment detail</h2>
 
     <%= form_for @changeset, client_detail_path(@conn, :update_payment, @client_detail), fn f -> %>
@@ -100,7 +107,27 @@
       <%= submit "Pay", class: "btn btn-primary" %>
     </div>
     <% end %>
+    <h2>Listing Client Transaction</h2>
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Payment Type</th>
+                <th>Amount Paid</th>
+                <th>Transacted by</th>
 
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+          <%= for client_information <- @client_detail.client_information do %>
+              <tr>
+                <td><%= client_information.payment_type %></td>
+                <td><%= client_information.payment_amount %></td>
+                <td><%= client_information.user.name %></td>
+              </tr>
+          <% end %>
+            </tbody>
+          </table>
   <span><%= link "Back", to: client_detail_path(@conn, :index), class: "btn btn-link btn-sm"  %></span>
 
 </div>

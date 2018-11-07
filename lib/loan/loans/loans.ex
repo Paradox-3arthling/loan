@@ -20,6 +20,7 @@ defmodule Loan.Loans do
   """
   def list_client_details() do
     Repo.all(ClientDetail)
+    |> Repo.preload(:user)
     # ClientDetail
     # |> Repo.all()
     # |> Repo.preload(:client_information)
@@ -46,7 +47,14 @@ defmodule Loan.Loans do
   def get_client_detail!(id) do
     ClientDetail
     |> Repo.get!(id)
-    |> Repo.preload(:client_information)
+    |> Repo.preload(client_information: :user)
+    |> Repo.preload(:user)
+  end
+  def get_client_detail(id) do
+    ClientDetail
+    |> Repo.get(id)
+    |> Repo.preload(client_information: :user)
+    |> Repo.preload(:user)
   end
 
   @doc """

@@ -23,10 +23,10 @@ defmodule LoanWeb.SessionController do
   end
 
   def delete(conn, _) do
-    configure_session(conn, drop: true)
+    # configure_session(conn, drop: true)
     conn
-    |> put_flash(:info, "Good Bye!")
-    # |> configure_session(drop: true)
+    |> configure_session(drop: true)
+    # |> put_flash(:info, "Good Bye!")
     |> redirect(to: session_path(conn, :new))
   end
 end

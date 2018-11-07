@@ -2,7 +2,9 @@
 
 <div class="container">
   <%= form_for @conn, session_path(@conn, :delete), [method: :delete, as: :user], fn _ -> %>
-    <span><%= submit "logout", class: "btn btn-default" %></span>
+    <div class="form-group">
+      <%= submit "logout", class: "btn btn-primary" %>
+    </div>
   <% end %>
 
 

@@ -73,17 +73,13 @@ defmodule LoanWeb.ClientDetailController do
   end
 
   def show(conn, %{"id" => id}) do
-    client_detail = Loans.get_client_detail!(id)
-    ################################
-    Logger.info "--------------------------"
-    Logger.info "total payment #{inspect(client_detail)}"
-    if client_detail == [] do
-      ################################
-      Logger.info "--------------------------"
-      Logger.info "Suck my spaghetti meat "
-
+    case Loans.get_client_detail(id) do
+      nil ->
+        conn
+        |> put_flash(:info, "Client does not exist")
+        |> redirect(to: client_detail_path(conn, :index))
+      client_detail -> render(conn, "show.html", client_detail: client_detail)
     end
-    render(conn, "show.html", client_detail: client_detail)
   end
 
   def edit(conn, %{"id" => id}) do
@@ -93,9 +89,16 @@ defmodule LoanWeb.ClientDetailController do
   end
 
   def show_payment_page(conn, %{"id" => id}) do
-    client_detail = Loans.get_client_detail!(id)
-    changeset = Loans.change_client_detail(client_detail)
-    render(conn, "pay.html", client_detail: client_detail, changeset: changeset)
+
+      case Loans.get_client_detail(id) do
+        nil ->
+          conn
+          |> put_flash(:info, "Client does not exist, so payment wo't be not possible")
+          |> redirect(to: client_detail_path(conn, :index))
+        client_detail ->
+          changeset = Loans.change_client_detail(client_detail)
+          render(conn, "pay.html", client_detail: client_detail, changeset: changeset)
+      end
   end
 
   def update_payment(conn, %{"id" => id, "client_detail" => client_detail_params}) do

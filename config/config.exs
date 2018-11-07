@@ -12,7 +12,7 @@ config :loan,
 # Configures the endpoint
 config :loan, LoanWeb.Endpoint,
   url: [host: "localhost"],
-  secret_key_base: "aCUOGunqaFTJjkdUji87fM1UBO+qUpZsiYtn1c2nyUArBYbEYg7sIv+KZSxd/h6h",
+  secret_key_base: "ADUOGunqaFTJjkdUji87fM1UBO+qUpZsiYtn1c2nyUArBYbEYg7sIv+KZSxd/h6h",
   render_errors: [view: LoanWeb.ErrorView, accepts: ~w(html json)],
   pubsub: [name: Loan.PubSub,
            adapter: Phoenix.PubSub.PG2]
