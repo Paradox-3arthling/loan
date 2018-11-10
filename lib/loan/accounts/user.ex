@@ -2,7 +2,6 @@ defmodule Loan.Accounts.User do
   use Ecto.Schema
   import Ecto.Changeset
   alias Loan.Accounts.Credential
-  alias Loan.Loans.{ClientDetail,ClientInformation}
 
 
   schema "users" do
@@ -10,8 +9,6 @@ defmodule Loan.Accounts.User do
     field :mobileNo, :string
     field :name, :string
     has_one :credential, Credential
-    has_many :client_detail, ClientDetail
-    has_many :client_information, ClientInformation
 
     timestamps()
   end

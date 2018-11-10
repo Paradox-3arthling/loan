@@ -1,8 +1,8 @@
 <div class="container">
   <h2>New Client detail</h2>
 
-  <%= render "form.html", Map.put(assigns, :action, client_detail_path(@conn, :create)) %>
+  <%= render "form.html", Map.put(assigns, :action, Routes.client_detail_path(@conn, :create)) %>
 
-  <span><%= link "Back", to: client_detail_path(@conn, :index) %></span>
+  <span><%= link "Back", to: Routes.client_detail_path(@conn, :index) %></span>
 
 </div>

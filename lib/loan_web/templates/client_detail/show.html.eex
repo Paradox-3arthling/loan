@@ -95,9 +95,9 @@
 
   </ul>
 
-      <span><%= link "Edit", to: client_detail_path(@conn, :edit, @client_detail), class: "btn btn-link btn-sm" %></span>
-      <span><%= link "List ya Clients", to: client_detail_path(@conn, :index), class: "btn btn-info btn-sm" %></span>
-      <span><%= link "Kulipa", to: client_detail_path(@conn, :show_payment_page, @client_detail), class: "btn btn-primary btn-sm" %></span>
+      <span><%= link "Edit", to: Routes.client_detail_path(@conn, :edit, @client_detail), class: "btn btn-link btn-sm" %></span>
+      <span><%= link "List ya Clients", to: Routes.client_detail_path(@conn, :index), class: "btn btn-info btn-sm" %></span>
+      <span><%= link "Kulipa", to: Routes.client_detail_path(@conn, :show_payment_page, @client_detail), class: "btn btn-primary btn-sm" %></span>
 <h2>Listing Client Transaction</h2>
       <table class="table">
         <thead>

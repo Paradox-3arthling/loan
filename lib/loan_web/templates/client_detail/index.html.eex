@@ -1,5 +1,5 @@
 <div class="container">
-  <%= form_for @conn, session_path(@conn, :delete), [method: :delete, as: :user], fn _ -> %>
+  <%= form_for @conn, Routes.session_path(@conn, :delete), [method: :delete, as: :user], fn _ -> %>
     <div class="form-group">
       <%= submit "logout", class: "btn btn-primary" %>
     </div>
@@ -41,9 +41,9 @@
       <td><%= client_detail.day_not_paid %></td>
 
       <td class="text-right">
-        <span><%= link "Pay Due's", to: client_detail_path(@conn, :show_payment_page, client_detail), class: "btn btn-primary btn-xs" %></span>
-        <span><%= link "Show", to: client_detail_path(@conn, :show, client_detail), class: "btn btn-default btn-xs" %></span>
-        <span><%= link "Delete", to: client_detail_path(@conn, :delete, client_detail), method: :delete, data: [confirm: "Are you sure?"], class: "btn btn-danger btn-xs" %></span>
+        <span><%= link "Pay Due's", to: Routes.client_detail_path(@conn, :show_payment_page, client_detail), class: "btn btn-primary btn-xs" %></span>
+        <span><%= link "Show", to: Routes.client_detail_path(@conn, :show, client_detail), class: "btn btn-default btn-xs" %></span>
+        <span><%= link "Delete", to: Routes.client_detail_path(@conn, :delete, client_detail), method: :delete, data: [confirm: "Are you sure?"], class: "btn btn-danger btn-xs" %></span>
         </td>
     </tr>
 <% end %>
@@ -63,5 +63,5 @@
   </tbody>
 </table>
 <div class="container">
-  <span><%= link "New Client detail", to: client_detail_path(@conn, :new), class: "btn btn-info btn-sm" %></span>
+  <span><%= link "New Client detail", to: Routes.client_detail_path(@conn, :new), class: "btn btn-info btn-sm" %></span>
 </div>

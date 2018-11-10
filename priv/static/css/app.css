@@ -2,7 +2,9 @@
 /* Includes Bootstrap as well as some default style for the starter
  * application. This can be safely deleted to start fresh.
  */
+ /* This file is for your main application css. */
 
+ /* @import "./phoenix.css"; */
 /*!
  * Bootstrap v3.3.5 (http://getbootstrap.com)
  * Copyright 2011-2015 Twitter, Inc.

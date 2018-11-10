@@ -1,7 +1,7 @@
 
 
 <div class="container">
-  <%= form_for @conn, session_path(@conn, :delete), [method: :delete, as: :user], fn _ -> %>
+  <%= form_for @conn, Routes.session_path(@conn, :delete), [method: :delete, as: :user], fn _ -> %>
     <div class="form-group">
       <%= submit "logout", class: "btn btn-primary" %>
     </div>
@@ -9,7 +9,7 @@
 
 
   <h2>Login</h2>
-  <%= form_for @conn, session_path(@conn, :create), [method: :post, as: :user], fn f -> %>
+  <%= form_for @conn, Routes.session_path(@conn, :create), [method: :post, as: :user], fn f -> %>
     <div class="form-group">
       <label>Username :</label> <%= text_input f, :username, class: "form-control", placeholder: "User Name" %>
     </div>
@@ -19,7 +19,7 @@
     </div>
 
   <span class="form-group"><%= submit "Login", class: "btn btn-primary" %></span>
-  <span class="form-group"><%= link "Create user", to: user_path(@conn, :new), class: "btn btn-default" %></span>
+  <span class="form-group"><%= link "Create user", to: Routes.user_path(@conn, :new), class: "btn btn-default" %></span>
   <% end %>
 
 

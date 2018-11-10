@@ -23,6 +23,26 @@ defmodule Loan.Accounts do
     |> Repo.preload(:credential)
   end
 
+    @doc """
+    Authenticates the user
+
+    ## Examples
+
+    coming soon :)
+
+    """    
+    def authenticate_by_username_password(username, password) do
+      query =
+        from u in User,
+        inner_join: c in assoc(u, :credential),
+        where: c.username == ^username and
+        c.password == ^password
+
+      case Repo.one(query) do
+        %User{} = user -> {:ok, user}
+        nil -> {:error, :unauthorized}
+      end
+    end
   @doc """
   Gets a single user.
 
@@ -37,6 +57,8 @@ defmodule Loan.Accounts do
       ** (Ecto.NoResultsError)
 
   """
+  # def get_user!(id), do: Repo.get!(User, id)
+
   def get_user!(id) do
     User
     |> Repo.get!(id)
@@ -59,19 +81,6 @@ defmodule Loan.Accounts do
     |> User.changeset(attrs)
     |> Ecto.Changeset.cast_assoc(:credential, with: &Credential.changeset/2)
     |> Repo.insert()
-  end
-
-  def authenticate_by_username_password(username, password) do
-    query =
-      from u in User,
-      inner_join: c in assoc(u, :credential),
-      where: c.username == ^username and
-      c.password == ^password
-
-    case Repo.one(query) do
-      %User{} = user -> {:ok, user}
-      nil -> {:error, :unauthorized}
-    end
   end
 
   @doc """
@@ -124,15 +133,15 @@ defmodule Loan.Accounts do
 
 
   @doc """
-  Returns the list of credentials.
+  Returns the list of credential.
 
   ## Examples
 
-      iex> list_credentials()
+      iex> list_credential()
       [%Credential{}, ...]
 
   """
-  def list_credentials do
+  def list_credential do
     Repo.all(Credential)
   end
 

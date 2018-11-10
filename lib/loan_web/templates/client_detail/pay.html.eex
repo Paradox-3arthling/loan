@@ -96,7 +96,7 @@
 
     <h2>Payment detail</h2>
 
-    <%= form_for @changeset, client_detail_path(@conn, :update_payment, @client_detail), fn f -> %>
+    <%= form_for @changeset, Routes.client_detail_path(@conn, :update_payment, @client_detail), fn f -> %>
     <div class="form-group">
       <label>Amount paid :</label>
       <%= text_input f, :paid, class: "form-control", Placeholder: 0 %>
@@ -128,6 +128,6 @@
           <% end %>
             </tbody>
           </table>
-  <span><%= link "Back", to: client_detail_path(@conn, :index), class: "btn btn-link btn-sm"  %></span>
+  <span><%= link "Back", to: Routes.client_detail_path(@conn, :index), class: "btn btn-link btn-sm"  %></span>
 
 </div>

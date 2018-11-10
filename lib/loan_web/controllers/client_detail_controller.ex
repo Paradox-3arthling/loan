@@ -55,7 +55,7 @@ defmodule LoanWeb.ClientDetailController do
           {:ok, client_detail} ->
             conn
             |> put_flash(:info, "Client detail created successfully.")
-            |> redirect(to: client_detail_path(conn, :show, client_detail))
+            |> redirect(to: Routes.client_detail_path(conn, :show, client_detail))
           {:error, %Ecto.Changeset{} = changeset} ->
             render(conn, "new.html", changeset: changeset)
         end
@@ -64,7 +64,7 @@ defmodule LoanWeb.ClientDetailController do
         {:ok, client_detail} ->
           conn
           |> put_flash(:info, "Client detail created successfully.")
-          |> redirect(to: client_detail_path(conn, :show, client_detail))
+          |> redirect(to: Routes.client_detail_path(conn, :show, client_detail))
         {:error, %Ecto.Changeset{} = changeset} ->
           render(conn, "new.html", changeset: changeset)
       end
@@ -77,7 +77,7 @@ defmodule LoanWeb.ClientDetailController do
       nil ->
         conn
         |> put_flash(:info, "Client does not exist")
-        |> redirect(to: client_detail_path(conn, :index))
+        |> redirect(to: Routes.client_detail_path(conn, :index))
       client_detail -> render(conn, "show.html", client_detail: client_detail)
     end
   end
@@ -94,7 +94,7 @@ defmodule LoanWeb.ClientDetailController do
         nil ->
           conn
           |> put_flash(:info, "Client does not exist, so payment wo't be not possible")
-          |> redirect(to: client_detail_path(conn, :index))
+          |> redirect(to: Routes.client_detail_path(conn, :index))
         client_detail ->
           changeset = Loans.change_client_detail(client_detail)
           render(conn, "pay.html", client_detail: client_detail, changeset: changeset)
@@ -169,7 +169,7 @@ defmodule LoanWeb.ClientDetailController do
                 conn
                 |> put_flash(:info, "Client payment successfully procesed!")
                 |> put_layout("app.html")
-                |> redirect(to: client_detail_path(conn, :show, client_detail))
+                |> redirect(to: Routes.client_detail_path(conn, :show, client_detail))
               {:error, %Ecto.Changeset{} = changeset} ->
                 render(conn, "pay.html", client_detail: client_detail, changeset: changeset)
             end
@@ -182,7 +182,7 @@ defmodule LoanWeb.ClientDetailController do
               conn
               |> put_flash(:info, "Client payment successfully paid.")
               |> put_layout("app.html")
-              |> redirect(to: client_detail_path(conn, :show, client_detail))
+              |> redirect(to: Routes.client_detail_path(conn, :show, client_detail))
             {:error, %Ecto.Changeset{} = changeset} ->
               render(conn, "pay.html", client_detail: client_detail, changeset: changeset)
           end
@@ -201,7 +201,7 @@ Logger.info "hello #{inspect(client_detail_params)}"
       {:ok, client_detail} ->
         conn
         |> put_flash(:info, "Client detail updated successfully.")
-        |> redirect(to: client_detail_path(conn, :show, client_detail))
+        |> redirect(to: Routes.client_detail_path(conn, :show, client_detail))
       {:error, %Ecto.Changeset{} = changeset} ->
         render(conn, "edit.html", client_detail: client_detail, changeset: changeset)
     end
@@ -221,6 +221,6 @@ Logger.info "hello #{inspect(client_detail_params)}"
 
     conn
     |> put_flash(:info, "Client detail deleted successfully.")
-    |> redirect(to: client_detail_path(conn, :index))
+    |> redirect(to: Routes.client_detail_path(conn, :index))
   end
 end

@@ -7,11 +7,11 @@
 
   <div class="form-group">
     <%= label f, :name, class: "control-label" %>
-    <%= text_input f, :name, class: "form-control" %>
+    <%= text_input f, :name, class: "form-control"  %>
     <%= error_tag f, :name %>
   </div>
 
-  <div class="form-group">
+ <div class="form-group">
    <%= inputs_for f, :credential, fn cf -> %>
      <%= label cf, :username, class: "control-label" %>
      <%= text_input cf, :username, class: "form-control" %>
@@ -19,17 +19,9 @@
    <% end %>
  </div>
 
- <div class="form-group">
-  <%= inputs_for f, :credential, fn cf -> %>
-    <%= label cf, :password, class: "control-label" %>
-    <%= password_input cf, :password, class: "form-control" %>
-    <%= error_tag cf, :password %>
-  <% end %>
-</div>
-
   <div class="form-group">
     <%= label f, :email, class: "control-label" %>
-    <%= email_input f, :email, class: "form-control" %>
+    <%= text_input f, :email, class: "form-control"  %>
     <%= error_tag f, :email %>
   </div>
 
@@ -39,7 +31,14 @@
     <%= error_tag f, :mobileNo %>
   </div>
 
-  <div class="form-group">
-    <%= submit "Submit", class: "btn btn-primary" %>
+<div class="form-group">
+  <%= inputs_for f, :credential, fn cf -> %>
+    <%= label cf, :password, class: "control-label" %>
+    <%= password_input cf, :password, class: "form-control" %>
+    <%= error_tag cf, :password %>
+  <% end %>
+</div>
+  <div>
+    <%= submit "Save" %>
   </div>
 <% end %>

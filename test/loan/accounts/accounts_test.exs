@@ -6,9 +6,9 @@ defmodule Loan.AccountsTest do
   describe "users" do
     alias Loan.Accounts.User
 
-    @valid_attrs %{email: "some email", mobileNo: "some mobileNo", name: "some name"}
-    @update_attrs %{email: "some updated email", mobileNo: "some updated mobileNo", name: "some updated name"}
-    @invalid_attrs %{email: nil, mobileNo: nil, name: nil}
+    @valid_attrs %{email: "some email", name: "some name"}
+    @update_attrs %{email: "some updated email", name: "some updated name"}
+    @invalid_attrs %{email: nil, name: nil}
 
     def user_fixture(attrs \\ %{}) do
       {:ok, user} =
@@ -32,7 +32,6 @@ defmodule Loan.AccountsTest do
     test "create_user/1 with valid data creates a user" do
       assert {:ok, %User{} = user} = Accounts.create_user(@valid_attrs)
       assert user.email == "some email"
-      assert user.mobileNo == "some mobileNo"
       assert user.name == "some name"
     end
 
@@ -42,10 +41,8 @@ defmodule Loan.AccountsTest do
 
     test "update_user/2 with valid data updates the user" do
       user = user_fixture()
-      assert {:ok, user} = Accounts.update_user(user, @update_attrs)
-      assert %User{} = user
+      assert {:ok, %User{} = user} = Accounts.update_user(user, @update_attrs)
       assert user.email == "some updated email"
-      assert user.mobileNo == "some updated mobileNo"
       assert user.name == "some updated name"
     end
 
@@ -67,7 +64,7 @@ defmodule Loan.AccountsTest do
     end
   end
 
-  describe "credentials" do
+  describe "credential" do
     alias Loan.Accounts.Credential
 
     @valid_attrs %{password: "some password", username: "some username"}
@@ -83,9 +80,9 @@ defmodule Loan.AccountsTest do
       credential
     end
 
-    test "list_credentials/0 returns all credentials" do
+    test "list_credential/0 returns all credential" do
       credential = credential_fixture()
-      assert Accounts.list_credentials() == [credential]
+      assert Accounts.list_credential() == [credential]
     end
 
     test "get_credential!/1 returns the credential with given id" do
@@ -105,8 +102,7 @@ defmodule Loan.AccountsTest do
 
     test "update_credential/2 with valid data updates the credential" do
       credential = credential_fixture()
-      assert {:ok, credential} = Accounts.update_credential(credential, @update_attrs)
-      assert %Credential{} = credential
+      assert {:ok, %Credential{} = credential} = Accounts.update_credential(credential, @update_attrs)
       assert credential.password == "some updated password"
       assert credential.username == "some updated username"
     end
