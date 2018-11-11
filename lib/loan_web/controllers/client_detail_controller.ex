@@ -115,60 +115,81 @@ defmodule LoanWeb.ClientDetailController do
     date_map = %{"day" => Integer.to_string(date.day), "month" => Integer.to_string(date.month), "year" => Integer.to_string(date.year)}
 
     case  Float.parse(client_detail_params["paid"]) do
-        {payment, ""} -> total = total - payment
-            total_paid = total_paid + payment
-            total_without_penalty = total_without_penalty - (payment - penalties)
-            penalties = penalties - payment
-            ################################
-            user_id = get_session(conn, :user_id)
-            link_insertion = %{"user_id" => user_id, "client_detail_id" => id, "payment_type" => "Payment", "total_db" => total_db, "payment_amount" => payment}
+        {payment, ""} ->
+          #####Recording the transaction##################
+          user_id = get_session(conn, :user_id)
+          link_insertion = %{"user_id" => user_id, "client_detail_id" => id, "payment_type" => "Payment", "total_db" => total_db, "payment_amount" => payment}
+          #####Recording the transaction##################
 
-            Logger.info "--------------------------"
-            Logger.info "link_insertion #{inspect(link_insertion)}"
-            ################################
-            Logger.info "--------------------------"
-            Logger.info "minimum payment : #{inspect(minimum_payment)}"
-            Logger.info "--------------------------"
-            Logger.info "--------------------------"
-            Logger.info "before payment : #{inspect(client_detail_params)}"
-            Logger.info "--------------------------"
-
-
-            client_detail_params = Map.put(client_detail_params, "total", total)
-            client_detail_params = Map.put(client_detail_params, "total_paid", total_paid)
-            # client_detail_params = Map.put(client_detail_params, "total_without_penalty", total_without_penalty)
+              #Add up the total paid by client
+            client_detail_params = Map.put(client_detail_params, "total_paid", total_paid + payment)
+              #Then deduct penalty from payment
+            payment = payment - penalties
+              #What client has paid for without penalties
+            total_without_penalty = total_without_penalty + payment
             client_detail_params =
-            if penalties <= 0 do
+            if payment >= 0 do
+                #When the payment is not a -ve is when we reset the payment and add up the total paid without penalty(total_without_penalty)
               client_detail_params
               |> Map.put("total_without_penalty", total_without_penalty)
               |> Map.put("total_penalty", 0)
             else
+              #when monthly minimum is not achieved we add -ve payment
               client_detail_params
-              |> Map.put("monthly_payable", minimum_payment - payment)
-              |> Map.put("total_penalty", penalties)
+              |> Map.put("total_penalty", penalties - payment)
+              |> Map.put("monthly_payable", minimum_payment + payment)
             end
+              #What is Remaining of the payment to be deducted from monthly payable
+            minimum_payment = minimum_payment - payment
             client_detail_params =
-            if payment >= minimum_payment do
-              put_in client_detail_params["paydate"], date_map
-            else
-              put_in client_detail_params["monthly_payable"], minimum_payment - payment
-            end
-            client_detail_params =
-            if payment >= minimum_payment do
-              put_in client_detail_params["monthly_payable"], client_detail.interest
+            if minimum_payment <= 0 do
+              #when monthly minimum is paid is when we deduct from total Remaining
+            # put_in client_detail_params["total"], total - minimum_payment #Incase they need the total to always add up when the total principal is not paiddo
+              #when monthly minimum is paid we roll over date
+              #when monthly minimum is paid we reset the monthly payable
+              client_detail_params
+              |> Map.put("total", total - minimum_payment)
+              |> Map.put("paydate", date_map)
+              |> Map.put("monthly_payable", client_detail.interest)
             else
               client_detail_params
             end
 
-            Logger.info "after payment : #{inspect(client_detail_params)}"
+##Incase
+            # client_detail_params =
+            # if penalties <= 0 do
+            #   put_in client_detail_params["total_penalty"], 0
+            # else
+            #   client_detail_params
+            #   |> Map.put("monthly_payable", minimum_payment - payment)
+            #   |> Map.put("total_penalty", penalties)
+            # end
+            # client_detail_params =
+            # if payment >= minimum_payment do
+            #   client_detail_params
+            #   |> Map.put("paydate", date_map)
+            #   |> Map.put("monthly_payable", client_detail.interest)
+            # else
+            #   put_in client_detail_params["monthly_payable"], minimum_payment - payment
+            # end
+##Incase
+            ################################
             Logger.info "--------------------------"
+            Logger.info "Happy to work for you :)"
+            Logger.info "--------------------------"
+            ################################
+            ################################
+            Logger.info "--------------------------"
+            Logger.info "client_detail_params: #{inspect(client_detail_params)}"
+            Logger.info "--------------------------"
+            ################################
 
             case Loans.update_client_payment(client_detail, client_detail_params, total_db) do
               {:ok, client_detail} ->
                 Loans.create_client_information(link_insertion)
                 conn
                 |> put_flash(:info, "Client payment successfully procesed!")
-                |> put_layout("app.html")
+                # |> put_layout("app.html")
                 |> redirect(to: Routes.client_detail_path(conn, :show, client_detail))
               {:error, %Ecto.Changeset{} = changeset} ->
                 render(conn, "pay.html", client_detail: client_detail, changeset: changeset)
