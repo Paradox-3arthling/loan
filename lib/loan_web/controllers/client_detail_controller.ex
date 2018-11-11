@@ -125,14 +125,12 @@ defmodule LoanWeb.ClientDetailController do
             client_detail_params = Map.put(client_detail_params, "total_paid", total_paid + payment)
               #Then deduct penalty from payment
             payment = payment - penalties
-              #What client has paid for without penalties
-            total_without_penalty = total_without_penalty + payment
             client_detail_params =
             if payment >= 0 do
                 #When the payment is not a -ve is when we reset the payment and add up the total paid without penalty(total_without_penalty)
               client_detail_params
-              |> Map.put("total_without_penalty", total_without_penalty)
               |> Map.put("total_penalty", 0)
+              |> Map.put("monthly_payable", minimum_payment - payment)
             else
               #when monthly minimum is not achieved we add -ve payment
               client_detail_params
@@ -143,12 +141,14 @@ defmodule LoanWeb.ClientDetailController do
             minimum_payment = minimum_payment - payment
             client_detail_params =
             if minimum_payment <= 0 do
-              #when monthly minimum is paid is when we deduct from total Remaining
-            # put_in client_detail_params["total"], total - minimum_payment #Incase they need the total to always add up when the total principal is not paiddo
-              #when monthly minimum is paid we roll over date
-              #when monthly minimum is paid we reset the monthly payable
+              #1)What client has paid for without penalties
+              #2)when monthly minimum is paid is when we deduct from total Remaining
+            #2[optional] put_in client_detail_params["total"], total - minimum_payment #Incase they need the total to always add up when the total principal is not paiddo
+              #3)when monthly minimum is paid we roll over date
+              #4)when monthly minimum is paid we reset the monthly payable
               client_detail_params
-              |> Map.put("total", total - minimum_payment)
+              |> Map.put("total_without_penalty", total_without_penalty + minimum_payment)
+              |> Map.put("total", total + minimum_payment)
               |> Map.put("paydate", date_map)
               |> Map.put("monthly_payable", client_detail.interest)
             else
