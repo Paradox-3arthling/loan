@@ -218,7 +218,7 @@ Logger.info "--------------------------"
 Logger.info "hello #{inspect(client_detail_params)}"
 
 #################################
-    case Loans.update_client_detail(client_detail, client_detail_params) do
+    case Loans.update_client_detail_information(client_detail, client_detail_params) do
       {:ok, client_detail} ->
         conn
         |> put_flash(:info, "Client detail updated successfully.")

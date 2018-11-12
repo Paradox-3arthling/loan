@@ -91,7 +91,17 @@ defmodule Loan.Loans do
   """
   def update_client_detail(%ClientDetail{} = client_detail, attrs) do
     client_detail
-    |> ClientDetail.changeset(attrs)
+    |> ClientDetail.changeset_automation(attrs)
+    |> Repo.update()
+  end
+
+    @doc """
+    For updating client details...only the unneccessary details
+    """
+
+  def update_client_detail_information(%ClientDetail{} = client_detail, attrs) do
+    client_detail
+    |> ClientDetail.changeset_update(attrs)
     |> Repo.update()
   end
 
@@ -223,5 +233,20 @@ defmodule Loan.Loans do
   """
   def change_client_information(%ClientInformation{} = client_information) do
     ClientInformation.changeset(client_information, %{})
+  end
+
+  @doc """
+  Returns a List of clients who haven't paid yet
+
+  """
+  def get_late_payment_clients(date) do
+    query =
+      from cd in ClientDetail,
+      where: cd.paydate < ^date
+    Repo.all(query)
+    # case Repo.all(query) do
+    #   %ClientDetail{} = client_detail -> {:ok, client_detail}
+    #   nil -> {:error, :unauthorized}
+    # end
   end
 end

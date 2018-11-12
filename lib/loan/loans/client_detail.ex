@@ -48,7 +48,12 @@ defmodule Loan.Loans.ClientDetail do
   def changeset_update(client_detail, attrs) do
     client_detail
     |> cast(attrs, [:residence, :mobile_number, :guarantor, :identification_number])
-    |> validate_required([:residence, :mobile_number, :guarantor, :identification_number])
+    # |> validate_required([:residence, :mobile_number, :guarantor, :identification_number])
+  end
+  @doc false
+  def changeset_automation(client_detail, attrs) do
+    client_detail
+    |> cast(attrs, [:total_penalty, :day_not_paid, :monthly_payable, :total])
   end
   @doc false
   def changeset_payment(client_detail, attrs, total) do

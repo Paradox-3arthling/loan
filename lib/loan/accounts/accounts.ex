@@ -30,7 +30,7 @@ defmodule Loan.Accounts do
 
     coming soon :)
 
-    """    
+    """
     def authenticate_by_username_password(username, password) do
       query =
         from u in User,
