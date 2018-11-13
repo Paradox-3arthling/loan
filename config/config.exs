@@ -10,10 +10,24 @@ use Mix.Config
 config :loan,
   ecto_repos: [Loan.Repo]
 
+config :loan, Loan.Worker,
+  jobs: [
+    # Every minute
+    {"* * * * *",       {Loan.Automation, :penalty_automation, []}} #,
+    # {"* * * * *",       fn -> IO.puts("automation") end} #,
+    # Every 15 minutes
+    # {"*/15 * * * *",   fn -> System.cmd("rm", ["/tmp/tmp_"]) end},
+    # # Runs on 18, 20, 22, 0, 2, 4, 6:
+    # {"0 18-6/2 * * *", fn -> :mnesia.backup('/var/backup/mnesia') end},
+    # # Runs every midnight:
+    # {"@daily",         {Backup, :backup, []}}
+  ],
+  debug_logging: false
+
 # Configures the endpoint
 config :loan, LoanWeb.Endpoint,
   url: [host: "localhost"],
-  secret_key_base: "7DAIx5DQAe2ZQWUO7dJIKsiIGbigcs5tNw1qarEU65dwTgYf+LbZqN4xhk4NnQ30",
+  secret_key_base: "7dAIx5DQAe2ZQWUO7dJIKsiIGbigcs5tNw1qarEU65dwTgYf+LbZqN4xhk4NnQ30",
   render_errors: [view: LoanWeb.ErrorView, accepts: ~w(html json)],
   pubsub: [name: Loan.PubSub, adapter: Phoenix.PubSub.PG2]
 

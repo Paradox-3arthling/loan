@@ -11,7 +11,8 @@ defmodule Loan.Application do
       # Start the Ecto repository
       Loan.Repo,
       # Start the endpoint when the application starts
-      LoanWeb.Endpoint
+      LoanWeb.Endpoint,
+      Loan.Worker
       # Starts a worker by calling: Loan.Worker.start_link(arg)
       # {Loan.Worker, arg},
     ]

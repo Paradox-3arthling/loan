@@ -112,7 +112,9 @@
             <thead>
               <tr>
                 <th>Payment Type</th>
-                <th>Amount Paid</th>
+                <th>Credit</th>
+                <th>Debit</th>
+                <th>Total</th>
                 <th>Transacted by</th>
 
                 <th></th>
@@ -122,7 +124,9 @@
           <%= for client_information <- @client_detail.client_information do %>
               <tr>
                 <td><%= client_information.payment_type %></td>
-                <td><%= client_information.payment_amount %></td>
+                <td><%= client_information.credit_amount %></td>
+                <td><%= client_information.debit_amount %></td>
+                <td><%= client_information.amount %></td>
                 <td><%= client_information.user.name %></td>
               </tr>
           <% end %>

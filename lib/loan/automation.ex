@@ -1,13 +1,13 @@
 defmodule Loan.Automation do
-
+  @moduledoc """
+    For automation of penalty automation... should be used once a day :)
+    """
   use Timex
 
   alias Loan.Loans
-  alias Loan.Loans.ClientDetail
-  def main_worker() do
+  def penalty_automation() do
     client_detail = Loans.get_late_payment_clients(Timex.now)
     penalize_clients client_detail
-
   end
 
   defp penalize_clients([client_detail | tail]) do
@@ -22,7 +22,7 @@ defmodule Loan.Automation do
     total_payable = Decimal.to_float(client_detail.total) +  Decimal.to_float(client_detail.penalties)
 
       #####Recording the transaction##################
-      link_insertion = %{"user_id" => 1, "client_detail_id" => client_detail.id, "payment_type" => "Penalty", "payment_amount" => client_detail.penalties}
+      link_insertion = %{"user_id" => 1, "client_detail_id" => client_detail.id, "payment_type" => "Penalty", "amount" => client_detail.penalties, "debit_amount" => client_detail.penalties, "credit_amount" => 0}
       #####Recording the transaction##################
     client_detail_params = %{"total_penalty" => total_payable_penalty, "day_not_paid" => -days_not_paid, "monthly_payable" => monthly_payable,"total" => total_payable }
     Loans.update_client_detail(client_detail, client_detail_params)
@@ -35,6 +35,6 @@ defmodule Loan.Automation do
 
   defp penalize_clients([]) do
     IO.puts "[Automation done]successfully completed automation at #{inspect(Timex.now)}"
-    []
+    :ok
   end
 end

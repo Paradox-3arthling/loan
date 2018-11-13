@@ -19,7 +19,8 @@ defmodule Loan.Loans do
 
   """
   def list_client_details() do
-    Repo.all(ClientDetail)
+    query = from c in ClientDetail, order_by: c.paydate
+    Repo.all(query)
     |> Repo.preload(:user)
     # ClientDetail
     # |> Repo.all()

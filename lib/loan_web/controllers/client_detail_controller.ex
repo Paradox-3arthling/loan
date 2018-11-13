@@ -118,25 +118,35 @@ defmodule LoanWeb.ClientDetailController do
         {payment, ""} ->
           #####Recording the transaction##################
           user_id = get_session(conn, :user_id)
-          link_insertion = %{"user_id" => user_id, "client_detail_id" => id, "payment_type" => "Payment", "total_db" => total_db, "payment_amount" => payment}
+          link_insertion = %{"user_id" => user_id, "client_detail_id" => id, "payment_type" => "Payment", "total_db" => total_db, "amount" => payment, "credit_amount" => payment, "debit_amount" => 0}
           #####Recording the transaction##################
 
               #Add up the total paid by client
             client_detail_params = Map.put(client_detail_params, "total_paid", total_paid + payment)
+            client_detail_params = Map.put(client_detail_params, "monthly_payable", minimum_payment - payment)
+
+            original_payment = payment
               #Then deduct penalty from payment
             payment = payment - penalties
+
+            ################################
+            Logger.info "--------------------------"
+            Logger.info "client_detail_params: #{inspect(client_detail_params)}"
+            Logger.info "--------------------------"
+            ################################
             client_detail_params =
             if payment >= 0 do
-                #When the payment is not a -ve is when we reset the payment and add up the total paid without penalty(total_without_penalty)
+                #When penalty are cleared reset it
               client_detail_params
               |> Map.put("total_penalty", 0)
-              |> Map.put("monthly_payable", minimum_payment - payment)
+              |> Map.put("total", total_db - penalties)
             else
-              #when monthly minimum is not achieved we add -ve payment
+                #When penalty are NOT cleared just minus the payment
               client_detail_params
-              |> Map.put("total_penalty", penalties - payment)
-              |> Map.put("monthly_payable", minimum_payment + payment)
+              |> Map.put("total_penalty", penalties - original_payment)
+              |> Map.put("total", total_db - original_payment)
             end
+            current_total = client_detail_params["total"]
               #What is Remaining of the payment to be deducted from monthly payable
             minimum_payment = minimum_payment - payment
             client_detail_params =
@@ -148,8 +158,9 @@ defmodule LoanWeb.ClientDetailController do
               #4)when monthly minimum is paid we reset the monthly payable
               client_detail_params
               |> Map.put("total_without_penalty", total_without_penalty + minimum_payment)
-              |> Map.put("total", total + minimum_payment)
+              |> Map.put("total", current_total + minimum_payment)
               |> Map.put("paydate", date_map)
+              |> Map.put("day_not_paid", 0)
               |> Map.put("monthly_payable", client_detail.interest)
             else
               client_detail_params
