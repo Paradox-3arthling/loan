@@ -106,7 +106,7 @@ defmodule LoanWeb.ClientDetailController do
 
     minimum_payment = Decimal.to_float(client_detail.monthly_payable)
 
-    total = Decimal.to_float(client_detail.total)
+    #total = Decimal.to_float(client_detail.total)
     total_db = Decimal.to_float(client_detail.total)
     total_paid = Decimal.to_float(client_detail.total_paid)
     total_without_penalty = Decimal.to_float(client_detail.total_without_penalty)
@@ -118,7 +118,7 @@ defmodule LoanWeb.ClientDetailController do
         {payment, ""} ->
           #####Recording the transaction##################
           user_id = get_session(conn, :user_id)
-          link_insertion = %{"user_id" => user_id, "client_detail_id" => id, "payment_type" => "Payment", "total_db" => total_db, "amount" => payment, "credit_amount" => payment, "debit_amount" => 0}
+          link_insertion = %{"user_id" => user_id, "client_detail_id" => id, "payment_type" => "Payment", "credit_amount" => minimum_payment, "debit_amount" => payment}
           #####Recording the transaction##################
 
               #Add up the total paid by client
@@ -129,11 +129,6 @@ defmodule LoanWeb.ClientDetailController do
               #Then deduct penalty from payment
             payment = payment - penalties
 
-            ################################
-            Logger.info "--------------------------"
-            Logger.info "client_detail_params: #{inspect(client_detail_params)}"
-            Logger.info "--------------------------"
-            ################################
             client_detail_params =
             if payment >= 0 do
                 #When penalty are cleared reset it
@@ -148,7 +143,7 @@ defmodule LoanWeb.ClientDetailController do
             end
             current_total = client_detail_params["total"]
               #What is Remaining of the payment to be deducted from monthly payable
-            minimum_payment = minimum_payment - payment
+            minimum_payment = minimum_payment - (payment + penalties)
             client_detail_params =
             if minimum_payment <= 0 do
               #1)What client has paid for without penalties
@@ -165,7 +160,17 @@ defmodule LoanWeb.ClientDetailController do
             else
               client_detail_params
             end
-
+              #Saving final total to keep track of client information :)
+          # total = client_detail.total
+          link_insertion = Map.put(link_insertion, "amount", client_detail.total)
+          link_insertion =
+            if payment < 0 || minimum_payment > 0 do
+              link_insertion
+              |> Map.put("credit_amount", original_payment)
+              |> Map.put("payment_type", "Payment(not minimum)")
+            else
+              link_insertion
+            end
 ##Incase
             # client_detail_params =
             # if penalties <= 0 do
@@ -191,7 +196,7 @@ defmodule LoanWeb.ClientDetailController do
             ################################
             ################################
             Logger.info "--------------------------"
-            Logger.info "client_detail_params: #{inspect(client_detail_params)}"
+            Logger.info "link_insertion: #{inspect(link_insertion)}"
             Logger.info "--------------------------"
             ################################
 
