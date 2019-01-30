@@ -4,6 +4,11 @@ This is loan management software made in the Elixir and Phoenix framework
 
 ## How to start
 
+Dependencies to be installed:
+  * Elixir
+  * Phoenix
+  * Mysql
+
 To start the software:
 
   * Clone project.
